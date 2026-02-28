@@ -1,0 +1,508 @@
+/tmp/build-env-zkiwtjv1/lib/python3.12/site-packages/setuptools/_vendor/wheel/bdist_wheel.py:4: FutureWarning: The 'wheel' package is no longer the canonical location of the 'bdist_wheel' command, and will be removed in a future release. Please update to setuptools v70.1 or later which contains an integrated version of this command.
+  warn(
+/tmp/build-env-zkiwtjv1/lib/python3.12/site-packages/setuptools/_vendor/wheel/bdist_wheel.py:4: FutureWarning: The 'wheel' package is no longer the canonical location of the 'bdist_wheel' command, and will be removed in a future release. Please update to setuptools v70.1 or later which contains an integrated version of this command.
+  warn(
+/tmp/build-env-zkiwtjv1/lib/python3.12/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+!!
+
+        ********************************************************************************
+        Please consider removing the following classifiers in favor of a SPDX license expression:
+
+        License :: OSI Approved :: MIT License
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+
+!!
+  self._finalize_license_expression()
+running bdist_wheel
+running build
+running build_ext
+configure: cmake -DCMAKE_C_COMPILER=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/cc -DCMAKE_CXX_COMPILER=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/c++ -DCMAKE_AR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/ar -DCMAKE_C_COMPILER_AR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/ar -DCMAKE_CXX_COMPILER_AR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/ar /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1 -DCMAKE_BUILD_TYPE=Release -DSYMENGINE_INSTALL_PY_FILES=ON -DPYTHON_BIN=/tmp/build-env-zkiwtjv1/bin/python -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=yes -DSymEngine_DIR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/lib/cmake/symengine -DBoost_INCLUDE_DIR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0 -DCMAKE_PREFIX_PATH=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install -DPYTHON_INCLUDE_PATH=/home/benjamin/.cache/.pyodide-xbuildenv-0.33.0/0.27.4/xbuildenv/pyodide-root/cpython/installs/python-3.12.7/include/python3.12 -DCMAKE_CROSSCOMPILING_EMULATOR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/emsdk/node/22.16.0_64bit/bin/node
+-- Found Boost: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0 (found version "1.84.0")  
+SymEngine_DIR : /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/lib/cmake/symengine
+SymEngine Version : 0.14.0
+-- Python include path: /home/benjamin/.cache/.pyodide-xbuildenv-0.33.0/0.27.4/xbuildenv/pyodide-root/cpython/installs/python-3.12.7/include/python3.12
+-- Python version: 3.12
+-- Python install path: /tmp/build-env-zkiwtjv1/lib/python3.12/site-packages
+-- Found Python: /home/benjamin/.cache/.pyodide-xbuildenv-0.33.0/0.27.4/xbuildenv/pyodide-root/cpython/installs/python-3.12.7/include/python3.12  
+-- Found CYTHON: /tmp/build-env-zkiwtjv1/bin/cython
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of long double
+-- Check size of long double - done
+CMAKE_SYSTEM_PROCESSOR              : x86
+CMAKE_BUILD_TYPE                    : Release
+CMAKE_CXX_FLAGS                     :  -O2 -g0 -fPIC -O2 -g0 -fPIC -O2 -g0 -fPIC -O2 -g0 -fPIC -O2 -g0 -fPIC -std=c++11  -fPIC
+CMAKE_CXX_FLAGS_RELEASE             : -Wall -Wextra -Wno-unused-parameter -O3 -funroll-loops -Wno-unknown-pragmas
+CMAKE_CXX_FLAGS_DEBUG               : -Wall -Wextra -Wno-unused-parameter -g -ggdb -Wno-unknown-pragmas
+HAVE_SYMENGINE_MPFR                 : False
+HAVE_SYMENGINE_MPC                  : False
+HAVE_SYMENGINE_PIRANHA              : False
+HAVE_SYMENGINE_FLINT                : False
+HAVE_SYMENGINE_LLVM                 : False
+HAVE_SYMENGINE_LLVM_LONG_DOUBLE     : False
+SYMENGINE_COPY_EXTENSION            : 
+Copying source of python wrappers into: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/lib.emscripten_3_1_58_wasm32-cpython-312
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/lib.emscripten_3_1_58_wasm32-cpython-312
+[ 16%] Preprocessing symengine_wrapper.in.pxd
+[ 33%] Preprocessing symengine_wrapper.in.pyx
+[ 50%] Cythonizing /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/lib.emscripten_3_1_58_wasm32-cpython-312/symengine/lib/symengine_wrapper.pyx
+warning: ./symengine.pxd:55:35: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:58:37: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:115:39: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:116:42: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:127:58: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:128:59: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:131:139: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:165:72: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:168:101: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:171:87: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:172:87: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:173:90: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:176:100: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:218:55: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:219:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:289:83: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:290:83: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:291:63: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:299:83: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:300:83: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:301:63: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:302:63: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:311:83: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:312:64: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:313:63: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:347:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:348:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:349:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:350:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:351:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:352:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:353:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:354:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:355:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:356:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:357:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:358:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:359:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:360:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:361:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:362:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:363:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:364:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:365:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:366:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:367:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:368:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:369:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:370:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:371:90: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:372:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:373:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:374:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:375:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:376:89: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:377:70: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:378:64: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:379:84: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:380:73: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:381:95: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:382:73: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:383:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:384:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:385:90: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:386:90: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:387:70: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:388:84: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:389:89: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:390:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:391:68: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:392:64: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:393:65: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:394:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:395:69: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:396:63: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:397:83: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:398:76: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:635:39: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:684:38: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:685:101: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:687:38: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:689:60: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:691:60: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:693:38: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:695:69: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:697:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:710:116: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:719:96: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:720:106: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:722:62: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:742:76: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:743:95: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:744:63: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:772:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:773:88: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:774:57: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:775:62: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:780:55: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:808:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:809:89: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:810:89: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:811:89: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:812:89: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:813:89: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:814:89: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:819:70: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:820:71: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:821:69: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:822:77: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:823:70: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:824:70: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:825:71: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:826:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:836:96: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:839:53: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:840:69: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:845:82: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:849:82: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:855:97: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:871:49: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:872:47: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:873:53: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:875:140: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:878:80: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:881:78: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:884:57: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:888:73: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:889:66: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:890:71: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:891:70: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:915:114: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:916:54: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:917:48: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:918:56: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:919:54: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:920:62: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:921:70: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:922:60: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:923:67: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:924:113: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:925:106: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:926:104: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:927:114: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:930:88: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:931:112: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:932:85: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:948:47: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:949:47: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:950:91: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: ./symengine.pxd:951:49: The keyword 'nogil' should appear at the end of the function signature line. Placing it before 'except' or 'noexcept' will be disallowed in a future version of Cython.
+warning: symengine_wrapper.pyx:1536:4: __nonzero__ was removed in Python 3; ignoring it and using __bool__ instead
+[ 66%] Building CXX object symengine/lib/CMakeFiles/symengine_wrapper.dir/symengine_wrapper.cpp.o
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/lib.emscripten_3_1_58_wasm32-cpython-312/symengine/lib/symengine_wrapper.cpp:1157:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/mp_class.h:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/cpp_int.hpp:17:
+/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/standalone_config.hpp:36:7: warning: "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)" [-W#warnings]
+   36 |  #    warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
+      |       ^
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/lib.emscripten_3_1_58_wasm32-cpython-312/symengine/lib/symengine_wrapper.cpp:1157:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/mp_class.h:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/cpp_int.hpp:19:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/number.hpp:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/generic_interconvert.hpp:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/default_ops.hpp:15:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/fpclassify.hpp:13:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/float128_functions.hpp:15:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/cstdfloat.hpp:18:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/math/cstdfloat/cstdfloat_types.hpp:17:
+/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/math/tools/config.hpp:23:6: warning: "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)" [-W#warnings]
+   23 | #    warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
+      |      ^
+2 warnings generated.
+[ 83%] Building CXX object symengine/lib/CMakeFiles/symengine_wrapper.dir/pywrapper.cpp.o
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/symengine/lib/pywrapper.cpp:1:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/symengine/lib/pywrapper.h:5:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/number.h:10:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/basic.h:37:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/dict.h:9:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/mp_class.h:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/cpp_int.hpp:17:
+/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/standalone_config.hpp:36:7: warning: "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)" [-W#warnings]
+   36 |  #    warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
+      |       ^
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/symengine/lib/pywrapper.cpp:1:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/symengine/lib/pywrapper.h:5:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/number.h:10:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/basic.h:37:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/dict.h:9:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/mp_class.h:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/cpp_int.hpp:19:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/number.hpp:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/generic_interconvert.hpp:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/default_ops.hpp:15:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/fpclassify.hpp:13:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/float128_functions.hpp:15:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/cstdfloat.hpp:18:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/math/cstdfloat/cstdfloat_types.hpp:17:
+/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/math/tools/config.hpp:23:6: warning: "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)" [-W#warnings]
+   23 | #    warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
+      |      ^
+2 warnings generated.
+[100%] Linking CXX shared library symengine_wrapper.cpython-312-x86_64-linux-gnu.so
+em++: warning: ignoring unsupported linker flag: `-soname` [-Wlinkflags]
+[100%] Built target symengine_wrapper
+installing to build/bdist.emscripten_3_1_58_wasm32/wheel
+running install
+running install_egg_info
+running egg_info
+creating symengine.egg-info
+writing symengine.egg-info/PKG-INFO
+writing dependency_links to symengine.egg-info/dependency_links.txt
+writing top-level names to symengine.egg-info/top_level.txt
+writing manifest file 'symengine.egg-info/SOURCES.txt'
+reading manifest file 'symengine.egg-info/SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no files found matching '*.hpp' under directory 'symengine'
+warning: no files found matching '*.in' under directory 'symengine'
+warning: no files found matching '*.cmake' under directory 'symengine'
+warning: no files found matching '*.pxi' under directory 'symengine'
+warning: no files found matching '*.in' under directory 'cmake'
+adding license file 'LICENSE'
+adding license file 'AUTHORS'
+writing manifest file 'symengine.egg-info/SOURCES.txt'
+Copying symengine.egg-info to build/bdist.emscripten_3_1_58_wasm32/wheel/symengine-0.14.1.data/purelib/symengine-0.14.1-py3.12.egg-info
+running install_scripts
+configure: cmake -DCMAKE_C_COMPILER=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/cc -DCMAKE_CXX_COMPILER=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/c++ -DCMAKE_AR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/ar -DCMAKE_C_COMPILER_AR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/ar -DCMAKE_CXX_COMPILER_AR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/.pyodide_build/pywasmcross_symlinks/ar /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1 -DPYTHON_BIN=/tmp/build-env-zkiwtjv1/bin/python -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=yes -DSymEngine_DIR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/lib/cmake/symengine -DBoost_INCLUDE_DIR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0 -DCMAKE_PREFIX_PATH=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install -DPYTHON_INCLUDE_PATH=/home/benjamin/.cache/.pyodide-xbuildenv-0.33.0/0.27.4/xbuildenv/pyodide-root/cpython/installs/python-3.12.7/include/python3.12 -DPYTHON_INSTALL_PATH=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/. -DCMAKE_CROSSCOMPILING_EMULATOR=/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/emsdk/node/22.16.0_64bit/bin/node
+SymEngine_DIR : /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/lib/cmake/symengine
+SymEngine Version : 0.14.0
+-- Python include path: /home/benjamin/.cache/.pyodide-xbuildenv-0.33.0/0.27.4/xbuildenv/pyodide-root/cpython/installs/python-3.12.7/include/python3.12
+-- Python version: 3.12
+-- Python install path: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/.
+-- Found Python: /home/benjamin/.cache/.pyodide-xbuildenv-0.33.0/0.27.4/xbuildenv/pyodide-root/cpython/installs/python-3.12.7/include/python3.12  
+-- Found CYTHON: /tmp/build-env-zkiwtjv1/bin/cython
+CMAKE_SYSTEM_PROCESSOR              : x86
+CMAKE_BUILD_TYPE                    : Release
+CMAKE_CXX_FLAGS                     : -I/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/utilities/cereal/include -O2 -g0 -fPIC -O2 -g0 -fPIC -O2 -g0 -fPIC -O2 -g0 -fPIC -std=c++11  -fPIC
+CMAKE_CXX_FLAGS_RELEASE             : -Wall -Wextra -Wno-unused-parameter -O3 -funroll-loops -Wno-unknown-pragmas
+CMAKE_CXX_FLAGS_DEBUG               : -Wall -Wextra -Wno-unused-parameter -g -ggdb -Wno-unknown-pragmas
+HAVE_SYMENGINE_MPFR                 : False
+HAVE_SYMENGINE_MPC                  : False
+HAVE_SYMENGINE_PIRANHA              : False
+HAVE_SYMENGINE_FLINT                : False
+HAVE_SYMENGINE_LLVM                 : False
+HAVE_SYMENGINE_LLVM_LONG_DOUBLE     : False
+SYMENGINE_COPY_EXTENSION            : 
+Copying source of python wrappers into: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/lib.emscripten_3_1_58_wasm32-cpython-312
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/lib.emscripten_3_1_58_wasm32-cpython-312
+Consolidate compiler generated dependencies of target symengine_wrapper
+[ 16%] Building CXX object symengine/lib/CMakeFiles/symengine_wrapper.dir/symengine_wrapper.cpp.o
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/lib.emscripten_3_1_58_wasm32-cpython-312/symengine/lib/symengine_wrapper.cpp:1157:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/mp_class.h:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/cpp_int.hpp:17:
+/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/standalone_config.hpp:36:7: warning: "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)" [-W#warnings]
+   36 |  #    warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
+      |       ^
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/lib.emscripten_3_1_58_wasm32-cpython-312/symengine/lib/symengine_wrapper.cpp:1157:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/mp_class.h:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/cpp_int.hpp:19:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/number.hpp:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/generic_interconvert.hpp:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/default_ops.hpp:15:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/fpclassify.hpp:13:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/float128_functions.hpp:15:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/cstdfloat.hpp:18:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/math/cstdfloat/cstdfloat_types.hpp:17:
+/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/math/tools/config.hpp:23:6: warning: "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)" [-W#warnings]
+   23 | #    warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
+      |      ^
+2 warnings generated.
+[ 33%] Building CXX object symengine/lib/CMakeFiles/symengine_wrapper.dir/pywrapper.cpp.o
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/symengine/lib/pywrapper.cpp:1:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/symengine/lib/pywrapper.h:5:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/number.h:10:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/basic.h:37:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/dict.h:9:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/mp_class.h:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/cpp_int.hpp:17:
+/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/standalone_config.hpp:36:7: warning: "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)" [-W#warnings]
+   36 |  #    warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
+      |       ^
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/symengine/lib/pywrapper.cpp:1:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/symengine/lib/pywrapper.h:5:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/number.h:10:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/basic.h:37:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/dict.h:9:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/install/include/symengine/mp_class.h:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/cpp_int.hpp:19:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/number.hpp:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/generic_interconvert.hpp:12:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/default_ops.hpp:15:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/fpclassify.hpp:13:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/multiprecision/detail/float128_functions.hpp:15:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/cstdfloat.hpp:18:
+In file included from /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/math/cstdfloat/cstdfloat_types.hpp:17:
+/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/boost_1_84_0/boost/math/tools/config.hpp:23:6: warning: "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)" [-W#warnings]
+   23 | #    warning "The minimum language standard to use Boost.Math will be C++14 starting in July 2023 (Boost 1.82 release)"
+      |      ^
+2 warnings generated.
+[ 50%] Linking CXX shared library symengine_wrapper.cpython-312-x86_64-linux-gnu.so
+em++: warning: ignoring unsupported linker flag: `-soname` [-Wlinkflags]
+[100%] Built target symengine_wrapper
+Install the project...
+-- Install configuration: "Release"
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/lib/symengine_wrapper.cpython-312-x86_64-linux-gnu.so
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/lib/symengine.pxd
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/lib/symengine_wrapper.pxd
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/lib/pywrapper.h
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/lib/__init__.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/__init__.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_arit.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_cse.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_dict_basic.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_eval.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_expr.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_functions.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_lambdify.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_logic.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_matrices.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_ntheory.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_number.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_pickling.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_printing.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sage.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_series_expansion.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sets.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_solve.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_subs.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_symbol.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sympify.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sympy_compat.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sympy_conv.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_var.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/__init__.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/functions.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/printing.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/sympy_compat.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/test_utilities.py
+-- Installing: /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/utilities.py
+Listing 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/__init__.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/functions.py'...
+Listing 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/lib'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/lib/__init__.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/printing.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/sympy_compat.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/test_utilities.py'...
+Listing 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/__init__.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_arit.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_cse.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_dict_basic.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_eval.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_expr.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_functions.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_lambdify.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_logic.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_matrices.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_ntheory.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_number.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_pickling.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_printing.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sage.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_series_expansion.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sets.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_solve.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_subs.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_symbol.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sympify.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sympy_compat.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_sympy_conv.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/tests/test_var.py'...
+Compiling 'build/bdist.emscripten_3_1_58_wasm32/wheel/./symengine/utilities.py'...
+creating build/bdist.emscripten_3_1_58_wasm32/wheel/symengine-0.14.1.dist-info/WHEEL
+creating '/mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/dist/.tmp-8uo1_z0r/symengine-0.14.1-cp312-cp312-emscripten_3_1_58_wasm32.whl' and adding 'build/bdist.emscripten_3_1_58_wasm32/wheel' to it
+adding 'symengine/__init__.py'
+adding 'symengine/functions.py'
+adding 'symengine/printing.py'
+adding 'symengine/sympy_compat.py'
+adding 'symengine/test_utilities.py'
+adding 'symengine/utilities.py'
+adding 'symengine/__pycache__/__init__.cpython-312.pyc'
+adding 'symengine/__pycache__/functions.cpython-312.pyc'
+adding 'symengine/__pycache__/printing.cpython-312.pyc'
+adding 'symengine/__pycache__/sympy_compat.cpython-312.pyc'
+adding 'symengine/__pycache__/test_utilities.cpython-312.pyc'
+adding 'symengine/__pycache__/utilities.cpython-312.pyc'
+adding 'symengine/lib/__init__.py'
+adding 'symengine/lib/pywrapper.h'
+adding 'symengine/lib/symengine.pxd'
+adding 'symengine/lib/symengine_wrapper.cpython-312-x86_64-linux-gnu.so'
+adding 'symengine/lib/symengine_wrapper.pxd'
+adding 'symengine/lib/__pycache__/__init__.cpython-312.pyc'
+adding 'symengine/tests/__init__.py'
+adding 'symengine/tests/test_arit.py'
+adding 'symengine/tests/test_cse.py'
+adding 'symengine/tests/test_dict_basic.py'
+adding 'symengine/tests/test_eval.py'
+adding 'symengine/tests/test_expr.py'
+adding 'symengine/tests/test_functions.py'
+adding 'symengine/tests/test_lambdify.py'
+adding 'symengine/tests/test_logic.py'
+adding 'symengine/tests/test_matrices.py'
+adding 'symengine/tests/test_ntheory.py'
+adding 'symengine/tests/test_number.py'
+adding 'symengine/tests/test_pickling.py'
+adding 'symengine/tests/test_printing.py'
+adding 'symengine/tests/test_sage.py'
+adding 'symengine/tests/test_series_expansion.py'
+adding 'symengine/tests/test_sets.py'
+adding 'symengine/tests/test_solve.py'
+adding 'symengine/tests/test_subs.py'
+adding 'symengine/tests/test_symbol.py'
+adding 'symengine/tests/test_sympify.py'
+adding 'symengine/tests/test_sympy_compat.py'
+adding 'symengine/tests/test_sympy_conv.py'
+adding 'symengine/tests/test_var.py'
+adding 'symengine/tests/__pycache__/__init__.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_arit.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_cse.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_dict_basic.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_eval.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_expr.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_functions.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_lambdify.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_logic.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_matrices.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_ntheory.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_number.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_pickling.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_printing.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_sage.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_series_expansion.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_sets.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_solve.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_subs.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_symbol.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_sympify.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_sympy_compat.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_sympy_conv.cpython-312.pyc'
+adding 'symengine/tests/__pycache__/test_var.cpython-312.pyc'
+adding 'symengine-0.14.1.dist-info/licenses/AUTHORS'
+adding 'symengine-0.14.1.dist-info/licenses/LICENSE'
+adding 'symengine-0.14.1.dist-info/METADATA'
+adding 'symengine-0.14.1.dist-info/WHEEL'
+adding 'symengine-0.14.1.dist-info/top_level.txt'
+adding 'symengine-0.14.1.dist-info/RECORD'
+removing build/bdist.emscripten_3_1_58_wasm32/wheel
+Unpacking to: /tmp/tmpll9oru1b/symengine-0.14.1...OK
+Repacking wheel as /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/dist/symengine-0.14.1-cp312-cp312-pyodide_2024_0_wasm32.whl...OK
+Successfully built /mnt/e/Projects/Visual-Studio/Math-App/pyodide-build/_build/symengine.py-0.14.1/dist/symengine-0.14.1-cp312-cp312-emscripten_3_1_58_wasm32.whl

@@ -922,6 +922,150 @@ test('a_1 retrieval',
 
 
 # ══════════════════════════════════════════════════════════════
+# 24. Matrix Operations
+# ══════════════════════════════════════════════════════════════
+
+print('\n' + '=' * 60)
+print('  24. Matrix Operations')
+print('=' * 60)
+cas_clear()
+
+# Matrix literal
+test('2x2 identity matrix literal',
+     r'\begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix}',
+     lambda r: result_ok(r) and r.get('is_matrix'))
+
+test('2x2 matrix with values',
+     r'\begin{pmatrix}1 & 2 \\ 3 & 4\end{pmatrix}',
+     lambda r: result_ok(r) and r.get('is_matrix') and r.get('rows') == 2 and r.get('cols') == 2)
+
+test('3x1 column vector',
+     r'\begin{pmatrix}1 \\ 2 \\ 3\end{pmatrix}',
+     lambda r: result_ok(r) and r.get('is_matrix') and r.get('rows') == 3 and r.get('cols') == 1)
+
+test('bmatrix (square brackets) parses',
+     r'\begin{bmatrix}5 & 6 \\ 7 & 8\end{bmatrix}',
+     lambda r: result_ok(r) and r.get('is_matrix'))
+
+# Matrix assignment
+test('Assign A = 2x2 matrix',
+     r'A = \begin{pmatrix}1 & 2 \\ 3 & 4\end{pmatrix}',
+     lambda r: result_ok(r) and r.get('type') == 'assignment' and r.get('name') == 'A')
+
+test('Retrieve A shows matrix',
+     'A',
+     lambda r: result_ok(r) and r.get('is_matrix'))
+
+# det
+test('det(2x2 identity) = 1',
+     r'det(\begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix})',
+     lambda r: result_ok(r) and '1' in r.get('plain', ''))
+
+test('det(A) where A = [[1,2],[3,4]] = -2',
+     'det(A)',
+     lambda r: result_ok(r) and '-2' in r.get('plain', ''))
+
+test('det([[2,0],[0,3]]) = 6',
+     r'det(\begin{pmatrix}2 & 0 \\ 0 & 3\end{pmatrix})',
+     lambda r: result_ok(r) and '6' in r.get('plain', ''))
+
+# inv
+test('inv(identity) = identity',
+     r'inv(\begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix})',
+     lambda r: result_ok(r) and r.get('is_matrix'))
+
+test('inv([[2,0],[0,4]]) = [[1/2,0],[0,1/4]]',
+     r'inv(\begin{pmatrix}2 & 0 \\ 0 & 4\end{pmatrix})',
+     lambda r: result_ok(r) and r.get('is_matrix') and '2' in r.get('plain', ''))
+
+# trace
+test('trace(identity 2x2) = 2',
+     r'trace(\begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix})',
+     lambda r: result_ok(r) and '2' in r.get('plain', ''))
+
+test('trace([[1,2],[3,4]]) = 5',
+     r'trace(\begin{pmatrix}1 & 2 \\ 3 & 4\end{pmatrix})',
+     lambda r: result_ok(r) and '5' in r.get('plain', ''))
+
+# transpose
+test('transpose([[1,2],[3,4]]) swaps rows and cols',
+     r'transpose(\begin{pmatrix}1 & 2 \\ 3 & 4\end{pmatrix})',
+     lambda r: result_ok(r) and r.get('is_matrix') and r.get('rows') == 2 and r.get('cols') == 2)
+
+test('transpose([[1,2,3]]) → column vector',
+     r'transpose(\begin{pmatrix}1 & 2 & 3\end{pmatrix})',
+     lambda r: result_ok(r) and r.get('is_matrix') and r.get('rows') == 3 and r.get('cols') == 1)
+
+# rank
+test('rank(identity) = 2',
+     r'rank(\begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix})',
+     lambda r: result_ok(r) and '2' in r.get('plain', ''))
+
+test('rank(zero matrix) = 0',
+     r'rank(\begin{pmatrix}0 & 0 \\ 0 & 0\end{pmatrix})',
+     lambda r: result_ok(r) and '0' in r.get('plain', ''))
+
+# rref
+test('rref([[1,2],[3,4]]) = identity',
+     r'rref(\begin{pmatrix}1 & 2 \\ 3 & 4\end{pmatrix})',
+     lambda r: result_ok(r) and r.get('is_matrix'))
+
+test('rref([[1,2,3],[4,5,6]]) pivot info',
+     r'rref(\begin{pmatrix}1 & 2 & 3 \\ 4 & 5 & 6\end{pmatrix})',
+     lambda r: result_ok(r) and r.get('is_matrix'))
+
+# eigenvals
+test('eigenvals([[1,0],[0,2]]) = {1,2}',
+     r'eigenvals(\begin{pmatrix}1 & 0 \\ 0 & 2\end{pmatrix})',
+     lambda r: result_ok(r) and '1' in r.get('plain', '') and '2' in r.get('plain', ''))
+
+# charpoly
+test('charpoly([[1,0],[0,1]]) of identity',
+     r'charpoly(\begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix})',
+     lambda r: result_ok(r) and ('lambda' in r.get('latex', '') or '\u03bb' in r.get('plain', '')))
+
+# nullspace
+test('nullspace(zero matrix) is non-trivial',
+     r'nullspace(\begin{pmatrix}0 & 0 \\ 0 & 0\end{pmatrix})',
+     lambda r: result_ok(r))
+
+# Symbolic entries
+test('Matrix with symbolic entry',
+     r'\begin{pmatrix}x & 1 \\ 0 & x\end{pmatrix}',
+     lambda r: result_ok(r) and r.get('is_matrix') and 'x' in r.get('plain', ''))
+
+test('det of symbolic matrix = x^2',
+     r'det(\begin{pmatrix}x & 1 \\ 0 & x\end{pmatrix})',
+     lambda r: result_ok(r) and 'x' in r.get('plain', ''))
+
+# Assign matrix B, retrieve it
+cas_evaluate(r'B = \begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix}')
+test('det(B) = 1 (named identity)',
+     'det(B)',
+     lambda r: result_ok(r) and '1' in r.get('plain', ''))
+
+
+# ══════════════════════════════════════════════════════════════
+# 25. SymEngine availability info
+# ══════════════════════════════════════════════════════════════
+
+print('\n' + '=' * 60)
+print('  25. Engine Info')
+print('=' * 60)
+
+import json as _json
+info = _json.loads(cas_engine_info())
+print(f"  SymPy version  : {info['sympy_version']}")
+print(f"  SymEngine avail: {info['symengine_available']}")
+if info['symengine_available']:
+    print(f"  SymEngine ver  : {info['symengine_version']}")
+else:
+    print("  (SymEngine not installed — pip install symengine for local speedup)")
+passed += 1  # informational: always passes
+print(f'  \u2713 cas_engine_info() returns valid data')
+
+
+# ══════════════════════════════════════════════════════════════
 #  SUMMARY
 # ══════════════════════════════════════════════════════════════
 

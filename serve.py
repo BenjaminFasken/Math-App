@@ -5,7 +5,11 @@ Then open http://localhost:8000
 """
 import http.server
 import socketserver
+import mimetypes
 import os
+
+# Ensure .whl files (Python wheels) are served correctly
+mimetypes.add_type('application/zip', '.whl')
 
 PORT = 8000
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))

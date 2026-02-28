@@ -359,6 +359,32 @@
         });
     }
 
+    // ── Matrix expression evaluation (called by MatrixPicker) ──
+
+    async function evaluateMatrixExpression(latexStr) {
+        // Create a new row and immediately evaluate the matrix expression
+        const rowInfo = addRow(null); // append at end
+
+        // Show loading
+        RowManager.showLoading(rowInfo.el);
+
+        try {
+            const result = await sendExpression(latexStr);
+            RowManager.showResult(rowInfo.el, result);
+        } catch (err) {
+            RowManager.showResult(rowInfo.el, {
+                ok: false,
+                error: err.message || 'Matrix evaluation failed',
+            });
+        }
+
+        // Add another empty row below for continued input
+        addRow(rowInfo.el);
+    }
+
+    // Expose for MatrixPicker.js
+    window.evaluateMatrixExpression = evaluateMatrixExpression;
+
     // ── Boot ───────────────────────────────────────────────
     let _booted = false;
     function boot() {
@@ -366,6 +392,13 @@
         _booted = true;
         init();
         initSymbolPicker();
+        // Boot the matrix picker, giving it access to the focused row
+        if (typeof MatrixPicker !== 'undefined') {
+            MatrixPicker.boot(() => {
+                if (focusedRowId === null) return null;
+                return rows.get(focusedRowId) || null;
+            });
+        }
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', boot);

@@ -7,12 +7,16 @@
 
     <!-- MathQuill dependencies -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.css">
+    <!-- KaTeX (matrix / advanced LaTeX rendering) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
     <link rel="stylesheet" href="css/style.css">
 
     <!-- jQuery (required by MathQuill) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- MathQuill -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
+    <!-- KaTeX -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
     <!-- Pyodide -->
     <script src="https://cdn.jsdelivr.net/pyodide/v0.27.4/full/pyodide.js"></script>
 </head>
@@ -73,7 +77,47 @@
                 <button class="picker-btn" data-latex="e^{}" title="Exponential">e^x</button>
                 <button class="picker-btn" data-latex="|" data-wrap="true" title="Absolute value">|x|</button>
             </div>
+            <!-- Matrix picker group -->
+            <div class="picker-group" data-group="matrix">
+                <span class="picker-label">Matrix</span>
+                <div class="matrix-picker-wrap" id="matrix-picker-wrap">
+                    <button class="picker-btn matrix-picker-trigger" id="matrix-picker-btn" title="Insert matrix">⊞ Matrix</button>
+                    <!-- Size selector popup -->
+                    <div class="matrix-size-popup" id="matrix-size-popup">
+                        <div class="matrix-size-label" id="matrix-size-label">Select size</div>
+                        <div class="matrix-size-grid" id="matrix-size-grid"></div>
+                    </div>
+                </div>
+                <!-- Quick matrix command buttons -->
+                <button class="picker-btn" data-matrix-cmd="det" title="Determinant: det(M)">det</button>
+                <button class="picker-btn" data-matrix-cmd="inv" title="Inverse: inv(M)">inv</button>
+                <button class="picker-btn" data-matrix-cmd="transpose" title="Transpose: transpose(M)">Tᵀ</button>
+                <button class="picker-btn" data-matrix-cmd="eigenvals" title="Eigenvalues: eigenvals(M)">λ</button>
+                <button class="picker-btn" data-matrix-cmd="rref" title="Row echelon: rref(M)">rref</button>
+            </div>
         </div>
+
+        <!-- Matrix input modal -->
+        <div id="matrix-modal" class="matrix-modal" aria-hidden="true">
+            <div class="matrix-modal-box">
+                <div class="matrix-modal-header">
+                    <span id="matrix-modal-title">Insert Matrix</span>
+                    <button class="matrix-modal-close" id="matrix-modal-close" title="Cancel">✕</button>
+                </div>
+                <div class="matrix-modal-name-row">
+                    <label for="matrix-name-input">Assign to variable (optional):</label>
+                    <input type="text" id="matrix-name-input" placeholder="e.g. A" maxlength="20">
+                </div>
+                <div class="matrix-modal-grid-wrap">
+                    <div id="matrix-modal-grid" class="matrix-modal-grid"></div>
+                </div>
+                <div class="matrix-modal-footer">
+                    <button class="btn-secondary" id="matrix-modal-cancel">Cancel</button>
+                    <button class="btn-primary" id="matrix-modal-insert">Insert &amp; Evaluate</button>
+                </div>
+            </div>
+        </div>
+
         <main id="notebook"></main>
     </div>
 
@@ -82,6 +126,7 @@
     <script src="js/loadPyodide.js"></script>
     <script src="js/sendExpression.js"></script>
     <script src="js/rowManager.js"></script>
+    <script src="js/matrixPicker.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

@@ -231,12 +231,22 @@ const RowManager = (() => {
         resEl.dataset.symbolicLatex = result.latex || '';
         resEl.dataset.numericLatex = result.numeric_latex || '';
         resEl.dataset.displayMode = 'symbolic';
+        resEl.dataset.isMatrix = result.is_matrix ? 'true' : 'false';
 
         if (result.latex) {
             const span = document.createElement('span');
             span.className = 'result-latex';
             resEl.appendChild(span);
-            MQ.StaticMath(span).latex(result.latex);
+
+            // Use KaTeX for matrix results (MathQuill can't render \begin{matrix})
+            if (result.is_matrix && typeof katex !== 'undefined') {
+                katex.render(result.latex, span, {
+                    throwOnError: false,
+                    displayMode: true,
+                });
+            } else {
+                MQ.StaticMath(span).latex(result.latex);
+            }
         } else {
             resEl.textContent = result.plain || '';
         }
@@ -282,6 +292,7 @@ const RowManager = (() => {
         // Update the rendered math (preserve badge and toggle button)
         const badge = resEl.querySelector('.row-assignment-indicator');
         const toggleBtn = resEl.querySelector('.btn-numeric-toggle');
+        const isMatrix = resEl.dataset.isMatrix === 'true';
         resEl.innerHTML = '';
 
         if (badge) resEl.appendChild(badge);
@@ -289,7 +300,12 @@ const RowManager = (() => {
         const span = document.createElement('span');
         span.className = 'result-latex';
         resEl.appendChild(span);
-        MQ.StaticMath(span).latex(newLatex);
+
+        if (isMatrix && typeof katex !== 'undefined') {
+            katex.render(newLatex, span, { throwOnError: false, displayMode: true });
+        } else {
+            MQ.StaticMath(span).latex(newLatex);
+        }
 
         if (toggleBtn) {
             toggleBtn.textContent = newMode === 'numeric' ? '=' : '≈';

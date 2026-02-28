@@ -1,0 +1,92 @@
+name: Build SymEngine for Pyodide
+
+on:
+  workflow_dispatch:
+    inputs:
+      pyodide_version:
+        description: 'Pyodide version'
+        default: '0.27.4'
+      symengine_version:
+        description: 'SymEngine C++ version'
+        default: '0.14.0'
+      symengine_py_version:
+        description: 'symengine.py version'
+        default: '0.14.1'
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pyodide-build
+        run: pip install pyodide-build
+
+      - name: Get Emscripten version
+        run: |
+          echo "EMSDK_VERSION=$(pyodide config get emscripten_version)" >> $GITHUB_ENV
+
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: ${{ env.EMSDK_VERSION }}
+
+      - name: Install Pyodide xbuildenv
+        run: pyodide xbuildenv install ${{ inputs.pyodide_version || '0.27.4' }}
+
+      - name: Download Boost headers
+        run: |
+          BOOST_VERSION="1.84.0"
+          BOOST_UNDER="${BOOST_VERSION//./_}"
+          wget -q "https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/boost_${BOOST_UNDER}.tar.gz"
+          tar xf "boost_${BOOST_UNDER}.tar.gz"
+          echo "BOOST_DIR=$(pwd)/boost_${BOOST_UNDER}" >> $GITHUB_ENV
+
+      - name: Download & cross-compile SymEngine C++
+        run: |
+          SE_VER="${{ inputs.symengine_version || '0.14.0' }}"
+          wget -q "https://github.com/symengine/symengine/releases/download/v${SE_VER}/symengine-${SE_VER}.tar.gz"
+          tar xf "symengine-${SE_VER}.tar.gz"
+
+          mkdir -p symengine-build && cd symengine-build
+          emcmake cmake "../symengine-${SE_VER}" \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="$(pwd)/../install" \
+            -DINTEGER_CLASS=boostmp \
+            -DBoost_INCLUDE_DIR="${BOOST_DIR}" \
+            -DBUILD_TESTS=OFF \
+            -DBUILD_BENCHMARKS=OFF \
+            -DWITH_SYMENGINE_THREAD_SAFE=OFF \
+            -DWITH_SYMENGINE_RCP=ON \
+            -DBUILD_SHARED_LIBS=OFF \
+            -DWITH_FLINT=OFF \
+            -DWITH_MPFR=OFF \
+            -DWITH_MPC=OFF \
+            -DWITH_LLVM=OFF
+          emmake make -j$(nproc)
+          emmake make install
+
+      - name: Download & build symengine.py wheel
+        run: |
+          SE_PY_VER="${{ inputs.symengine_py_version || '0.14.1' }}"
+          wget -q "https://github.com/symengine/symengine.py/archive/refs/tags/v${SE_PY_VER}.tar.gz" \
+            -O "symengine.py-${SE_PY_VER}.tar.gz"
+          tar xf "symengine.py-${SE_PY_VER}.tar.gz"
+
+          SE_CMAKE_DIR=$(find install -name "SymEngineConfig.cmake" -exec dirname {} \; | head -1)
+          export SymEngine_DIR="${SE_CMAKE_DIR}"
+          export CMAKE_ARGS="-DSymEngine_DIR=${SE_CMAKE_DIR} -DBoost_INCLUDE_DIR=${BOOST_DIR}"
+
+          cd "symengine.py-${SE_PY_VER}"
+          pyodide build
+
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: symengine-pyodide-wheel
+          path: |
+            symengine.py-*/dist/*.whl
+          if-no-files-found: error

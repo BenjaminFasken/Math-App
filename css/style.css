@@ -473,3 +473,221 @@ html, body {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+
+/* ════════════════════════════════════════════════════════════
+   Matrix Picker — size selector popup
+   ════════════════════════════════════════════════════════════ */
+
+.matrix-picker-wrap {
+    position: relative;
+    display: inline-flex;
+}
+
+.matrix-size-popup {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 500;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+    padding: 10px;
+    min-width: 180px;
+}
+
+.matrix-size-popup.open {
+    display: block;
+}
+
+.matrix-size-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    user-select: none;
+    text-align: center;
+}
+
+.matrix-size-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 26px);
+    gap: 3px;
+}
+
+.matrix-size-cell {
+    width: 26px;
+    height: 26px;
+    border-radius: 3px;
+    background: var(--surface-hover);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition);
+}
+
+.matrix-size-cell:hover,
+.matrix-size-cell.highlighted {
+    background: var(--accent);
+    border-color: var(--accent-light);
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   Matrix Input Modal
+   ════════════════════════════════════════════════════════════ */
+
+.matrix-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+    align-items: center;
+    justify-content: center;
+}
+
+.matrix-modal.open {
+    display: flex;
+}
+
+.matrix-modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+    padding: 20px 24px 16px;
+    min-width: 320px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.matrix-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.matrix-modal-header span {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent-light);
+}
+
+.matrix-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition), color var(--transition);
+}
+.matrix-modal-close:hover {
+    background: var(--surface-hover);
+    color: var(--error);
+}
+
+.matrix-modal-name-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.matrix-modal-name-row label {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.matrix-modal-name-row input {
+    width: 80px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 14px;
+    padding: 4px 8px;
+    outline: none;
+    font-family: var(--font-mono);
+    transition: border-color var(--transition);
+}
+.matrix-modal-name-row input:focus {
+    border-color: var(--accent);
+}
+
+.matrix-modal-grid-wrap {
+    overflow-x: auto;
+    margin-bottom: 16px;
+}
+
+.matrix-modal-grid {
+    display: grid;
+    gap: 5px;
+}
+
+.matrix-cell-input {
+    width: 64px;
+    height: 36px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 14px;
+    text-align: center;
+    padding: 4px;
+    font-family: var(--font-mono);
+    outline: none;
+    transition: border-color var(--transition);
+}
+
+.matrix-cell-input:focus {
+    border-color: var(--accent);
+    background: var(--row-focus);
+}
+
+.matrix-modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 7px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: background var(--transition);
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #fff;
+}
+.btn-primary:hover {
+    background: var(--accent-light);
+}
+
+.btn-secondary {
+    background: var(--surface-hover);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+.btn-secondary:hover {
+    background: var(--border);
+    color: var(--text);
+}

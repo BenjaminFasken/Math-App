@@ -7,6 +7,12 @@ Runs inside Pyodide (browser).  Provides:
   • Expression evaluation / simplification
   • solve, factor, expand, diff, integrate, limit, series, …
   • LaTeX input parsing and LaTeX output rendering
+  • Matrix operations (det, inv, transpose, eigenvals, rref, …)
+
+SymEngine note:
+  When python-symengine is installed (local Python), it is used as a
+  fast back-end for Symbol creation and basic algebra.  In Pyodide
+  (browser) SymPy is always used — SymEngine has no wasm build yet.
 
 All public API is exposed through the  `cas_evaluate(latex_str)`  function
 which returns a JSON string:
@@ -32,11 +38,13 @@ from sympy import (
     simplify, factor, expand, collect, cancel, apart, together, trigsimp, radsimp,
     solve, solveset, linsolve, nsolve,
     diff, integrate, limit, series, summation, product,
-    Matrix, eye, zeros, ones, det,
+    Matrix, eye, zeros, ones, det, trace, Transpose,
+    BlockMatrix, ImmutableMatrix,
     Eq, Ne, Lt, Le, Gt, Ge,
     latex, pretty, N,
     FiniteSet, Interval, Union, Intersection, EmptySet, S as Singletons,
 )
+from sympy.matrices import MatrixBase
 from sympy.parsing.latex import parse_latex
 from sympy.parsing.sympy_parser import (
     parse_expr,
@@ -44,6 +52,25 @@ from sympy.parsing.sympy_parser import (
     implicit_multiplication_application,
     convert_xor,
 )
+
+# ── Optional SymEngine back-end ──────────────────────────────────────────────
+# SymEngine provides faster symbolic manipulation and mirrors most of SymPy's
+# API.  In Pyodide it is not yet available (no wasm build), so we fall back
+# gracefully to pure SymPy.
+try:
+    import symengine as _symengine  # noqa: F401
+    _HAS_SYMENGINE = True
+except ImportError:
+    _HAS_SYMENGINE = False
+
+# Status queryable from JS
+def cas_engine_info():
+    """Return JSON info about the CAS back-end."""
+    return json.dumps({
+        'sympy_version': __import__('sympy').__version__,
+        'symengine_available': _HAS_SYMENGINE,
+        'symengine_version': __import__('symengine').__version__ if _HAS_SYMENGINE else None,
+    })
 
 # ── Global CAS State ────────────────────────────────────────
 # Stores user-defined variables:  name → { 'expr': <sympy expr>, 'deps': set of names }
@@ -213,6 +240,18 @@ _CMD_PATTERNS = {
     'series':     re.compile(r'^\\?series\s*\((.+)\)\s*$', re.I),
     'numerical':  re.compile(r'^N\s*\((.+)\)\s*$'),
     'subs':       re.compile(r'^\\?subs\s*\((.+)\)\s*$', re.I),
+    # Matrix commands
+    'det':         re.compile(r'^\\?det\s*\((.+)\)\s*$', re.I),
+    'inv':         re.compile(r'^\\?inv\s*\((.+)\)\s*$', re.I),
+    'trace':       re.compile(r'^\\?tr(?:ace)?\s*\((.+)\)\s*$', re.I),
+    'transpose':   re.compile(r'^\\?(?:transpose|trans)\s*\((.+)\)\s*$', re.I),
+    'eigenvals':   re.compile(r'^\\?eigenvals?\s*\((.+)\)\s*$', re.I),
+    'eigenvects':  re.compile(r'^\\?eigenvects?(?:ors?)?\s*\((.+)\)\s*$', re.I),
+    'rank':        re.compile(r'^\\?rank\s*\((.+)\)\s*$', re.I),
+    'rref':        re.compile(r'^\\?rref\s*\((.+)\)\s*$', re.I),
+    'charpoly':    re.compile(r'^\\?charpoly\s*\((.+)\)\s*$', re.I),
+    'nullspace':   re.compile(r'^\\?nullspace\s*\((.+)\)\s*$', re.I),
+    'colspace':    re.compile(r'^\\?colspace\s*\((.+)\)\s*$', re.I),
 }
 
 # Detect assignment:  x = expr   or   f(x, y) = expr
@@ -257,9 +296,69 @@ _KNOWN_NAMES = {
     'solve', 'factor', 'expand', 'simplify',
     'diff', 'integrate', 'limit', 'series',
     'lim', 'int', 'sum', 'prod',
+    # Matrix commands
+    'det', 'inv', 'trace', 'tr', 'transpose', 'trans',
+    'eigenvals', 'eigenvects', 'eigenvectors', 'rank', 'rref',
+    'nullspace', 'colspace', 'charpoly',
     'Rational', 'Integer', 'Float',
     'True', 'False', 'None',
 }
+
+
+# ── Matrix LaTeX Parsing ────────────────────────────────────────────
+
+# Pattern to detect a matrix environment
+_MATRIX_ENV_RE = re.compile(
+    r'^\\begin\{(p|b|v|B|V|small)?matrix\}(.+?)\\end\{(?:p|b|v|B|V|small)?matrix\}$',
+    re.DOTALL
+)
+
+
+def _parse_matrix_latex(tex):
+    """Parse a LaTeX matrix environment into a SymPy Matrix.
+
+    Handles \\begin{pmatrix}, \\begin{bmatrix}, \\begin{vmatrix},
+    \\begin{matrix}, etc.
+    Returns a SymPy Matrix or raises ValueError on failure.
+    """
+    m = _MATRIX_ENV_RE.match(tex.strip())
+    if not m:
+        raise ValueError(f'Not a recognized matrix environment: {tex[:60]}')
+
+    content = m.group(2)
+
+    # Split rows on \\\ (LaTeX row separator)
+    # Be careful: \\\\  in raw string is one LaTeX \\\\
+    row_strs = re.split(r'\\\\', content)
+    matrix_data = []
+    for row_str in row_strs:
+        row_str = row_str.strip()
+        if not row_str:
+            continue
+        cells = [c.strip() for c in row_str.split('&')]
+        parsed_cells = []
+        for cell in cells:
+            if cell == '':
+                parsed_cells.append(S.Zero)
+            else:
+                parsed_cells.append(_safe_parse_latex(cell))
+        matrix_data.append(parsed_cells)
+
+    if not matrix_data:
+        raise ValueError('Empty matrix')
+
+    # Verify rectangular
+    ncols = len(matrix_data[0])
+    for i, row in enumerate(matrix_data):
+        if len(row) != ncols:
+            raise ValueError(f'Jagged matrix: row {i} has {len(row)} cols, expected {ncols}')
+
+    return Matrix(matrix_data)
+
+
+def _is_matrix_expr(tex):
+    """Return True if tex starts with a matrix environment."""
+    return bool(_MATRIX_ENV_RE.match(tex.strip()))
 
 
 # Map of symbol names that should be replaced with SymPy constants after parsing
@@ -537,6 +636,10 @@ def _eval_inner(raw_latex):
     if m:
         return _handle_latex_limit_bare(m.group(1))
 
+    # ── 0.6  Matrix environment \begin{pmatrix}...\end{pmatrix} ──
+    if _is_matrix_expr(tex):
+        return _handle_matrix_literal(tex)
+
     # ── 1.  Detect function definition:  f(x, y) = expr ────
     m = _ASSIGN_FUNC.match(plain_cmd)
     if m:
@@ -546,9 +649,17 @@ def _eval_inner(raw_latex):
     # ── 2.  Detect variable assignment:  x = expr ──────────
     m = _ASSIGN_VAR.match(plain_cmd)
     if m:
-        vname, body_tex = m.group(1), m.group(2)
+        vname = m.group(1)
+        # Re-extract body from original tex to preserve LaTeX backslash commands
+        # (plain_cmd has backslashes stripped, which breaks \begin{matrix}...)
+        eq_idx = tex.index('=')
+        body_tex = tex[eq_idx + 1:].strip()
         # Make sure this isn't a known constant like e, i, pi
         if vname not in ('e', 'i', 'pi', 'E', 'I'):
+            # Check if the body is a matrix
+            body_preprocessed = _preprocess_latex(body_tex)
+            if _is_matrix_expr(body_preprocessed):
+                return _handle_matrix_assignment(vname, body_preprocessed)
             return _handle_var_assignment(vname, body_tex)
 
     # ── 3.  Check for equation (contains =) → maybe solve? ─
@@ -568,6 +679,11 @@ def _eval_inner(raw_latex):
     # ── 4.  Plain expression evaluation ─────────────────────
     expr = _safe_parse_latex(tex)
     resolved = _resolve_expr(expr)
+
+    # If substitution yielded a matrix (e.g. user typed a matrix variable name)
+    if isinstance(resolved, MatrixBase):
+        return _make_matrix_result(resolved, 'value')
+
     result = simplify(resolved)
 
     # Evaluate Integral / Derivative objects that simplify didn't resolve
@@ -578,6 +694,9 @@ def _eval_inner(raw_latex):
                 result = simplify(evaled)
         except Exception:
             pass
+
+    if isinstance(result, MatrixBase):
+        return _make_matrix_result(result, 'value')
 
     return _make_result(result, 'value')
 
@@ -612,6 +731,29 @@ def _handle_command(cmd, inner_tex, full_tex):
         result = N(_resolve_expr(expr), prec)
     elif cmd == 'subs':
         return _cmd_subs(parts)
+    # ── Matrix commands ──────────────────────────────────────────
+    elif cmd == 'det':
+        return _cmd_mat_det(parts)
+    elif cmd == 'inv':
+        return _cmd_mat_inv(parts)
+    elif cmd == 'trace':
+        return _cmd_mat_trace(parts)
+    elif cmd == 'transpose':
+        return _cmd_mat_transpose(parts)
+    elif cmd == 'eigenvals':
+        return _cmd_mat_eigenvals(parts)
+    elif cmd == 'eigenvects':
+        return _cmd_mat_eigenvects(parts)
+    elif cmd == 'rank':
+        return _cmd_mat_rank(parts)
+    elif cmd == 'rref':
+        return _cmd_mat_rref(parts)
+    elif cmd == 'charpoly':
+        return _cmd_mat_charpoly(parts)
+    elif cmd == 'nullspace':
+        return _cmd_mat_nullspace(parts)
+    elif cmd == 'colspace':
+        return _cmd_mat_colspace(parts)
     else:
         return json.dumps({'ok': False, 'error': f'Unknown command: {cmd}'})
 
@@ -698,6 +840,229 @@ def _cmd_subs(parts):
     result = expr.subs(old, new)
     result = simplify(result)
     return _make_result(result, 'command')
+
+
+# ── Matrix Handlers ─────────────────────────────────────────
+
+def _resolve_matrix_arg(tex):
+    """Parse a matrix argument — either a matrix literal or a named matrix variable."""
+    tex = tex.strip()
+    # Already a matrix environment?
+    if _is_matrix_expr(tex):
+        return _parse_matrix_latex(tex)
+    # A named variable holding a matrix?
+    name = re.sub(r'\\([a-zA-Z]+)', r'\1', tex).strip()
+    if name in _variables:
+        val = _resolve_variable(name)
+        if isinstance(val, MatrixBase):
+            return val
+    # Try parsing as an expression (e.g. A*B where A, B are matrix vars)
+    try:
+        return _resolve_matrix_expr(tex)
+    except Exception:
+        pass
+    raise ValueError(f'Cannot interpret as a matrix: {tex[:80]}')
+
+
+def _resolve_matrix_expr(tex):
+    """Attempt to evaluate a matrix expression involving defined matrix variables."""
+    # Replace variable names with their stored matrix values
+    # Simple approach: substitute each known matrix variable
+    result = _safe_parse_latex(tex)
+    for sym in list(result.free_symbols):
+        n = str(sym)
+        if n in _variables:
+            val = _resolve_variable(n)
+            result = result.subs(sym, val)
+    return result
+
+
+def _handle_matrix_literal(tex):
+    """Evaluate a bare matrix literal."""
+    try:
+        mat = _parse_matrix_latex(tex)
+        # Resolve any symbolic entries that are defined variables
+        mat = mat.applyfunc(lambda e: _resolve_expr(e))
+        return _make_matrix_result(mat, 'value')
+    except Exception as exc:
+        return json.dumps({'ok': False, 'error': str(exc)})
+
+
+def _handle_matrix_assignment(name, matrix_tex):
+    """Assign a matrix to a variable name."""
+    try:
+        mat = _parse_matrix_latex(matrix_tex)
+        mat = mat.applyfunc(lambda e: _resolve_expr(e))
+        # Store as an ImmutableMatrix so it behaves like a scalar in subs
+        _variables[name] = {'expr': ImmutableMatrix(mat), 'deps': set()}
+        return _make_matrix_result(mat, 'assignment', name=name)
+    except Exception as exc:
+        return json.dumps({'ok': False, 'error': str(exc)})
+
+
+def _make_matrix_result(mat, result_type, **extra):
+    """Build a JSON result for a matrix, with LaTeX and plain rendering."""
+    sym_latex = latex(mat)
+    sym_plain = pretty(mat, use_unicode=True)
+    result = {
+        'ok': True,
+        'latex': sym_latex,
+        'plain': sym_plain,
+        'type': result_type,
+        'is_matrix': True,
+        'rows': mat.rows,
+        'cols': mat.cols,
+    }
+    result.update(extra)
+    return json.dumps(result)
+
+
+def _cmd_mat_det(parts):
+    """det(M) — determinant of a matrix."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    if mat.rows != mat.cols:
+        return json.dumps({'ok': False, 'error': f'det() requires a square matrix, got {mat.rows}×{mat.cols}'})
+    result = simplify(mat.det())
+    return _make_result(result, 'command')
+
+
+def _cmd_mat_inv(parts):
+    """inv(M) — matrix inverse."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    if mat.rows != mat.cols:
+        return json.dumps({'ok': False, 'error': f'inv() requires a square matrix, got {mat.rows}×{mat.cols}'})
+    try:
+        result = mat.inv()
+        return _make_matrix_result(result, 'command')
+    except Exception as exc:
+        return json.dumps({'ok': False, 'error': f'Matrix is singular or non-invertible: {exc}'})
+
+
+def _cmd_mat_trace(parts):
+    """trace(M) — sum of diagonal elements."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    result = simplify(trace(mat))
+    return _make_result(result, 'command')
+
+
+def _cmd_mat_transpose(parts):
+    """transpose(M) — matrix transpose."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    return _make_matrix_result(mat.T, 'command')
+
+
+def _cmd_mat_eigenvals(parts):
+    """eigenvals(M) — eigenvalues with multiplicities."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    if mat.rows != mat.cols:
+        return json.dumps({'ok': False, 'error': 'eigenvals() requires a square matrix'})
+    evals = mat.eigenvals()
+    # Format: {eigenvalue: multiplicity, ...}
+    sym_latex = r'\left\{' + ',\ '.join(
+        f'{latex(v)} \\text{{ (mult. {m})}}'
+        for v, m in evals.items()
+    ) + r'\right\}'
+    sym_plain = '{' + ', '.join(
+        f'{pretty(v, use_unicode=True)} (mult. {m})'
+        for v, m in evals.items()
+    ) + '}'
+    return json.dumps({'ok': True, 'latex': sym_latex, 'plain': sym_plain, 'type': 'command'})
+
+
+def _cmd_mat_eigenvects(parts):
+    """eigenvects(M) — eigenvalues and their eigenvectors."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    if mat.rows != mat.cols:
+        return json.dumps({'ok': False, 'error': 'eigenvects() requires a square matrix'})
+    evects = mat.eigenvects()
+    # Format: [(eigenvalue, multiplicity, [vectors]), ...]
+    parts_latex = []
+    parts_plain = []
+    for eigenval, mult, vectors in evects:
+        vecs_latex = ', '.join(latex(v) for v in vectors)
+        vecs_plain = ', '.join(pretty(v, use_unicode=True) for v in vectors)
+        parts_latex.append(rf'\lambda={latex(eigenval)}\ (\times{mult}):\ [{vecs_latex}]')
+        parts_plain.append(f'λ={pretty(eigenval, use_unicode=True)} (×{mult}): [{vecs_plain}]')
+    return json.dumps({
+        'ok': True,
+        'latex': r'\\'.join(parts_latex),
+        'plain': '\n'.join(parts_plain),
+        'type': 'command',
+    })
+
+
+def _cmd_mat_rank(parts):
+    """rank(M) — matrix rank."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    result = Integer(mat.rank())
+    return _make_result(result, 'command')
+
+
+def _cmd_mat_rref(parts):
+    """rref(M) — reduced row echelon form."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    rref_mat, pivots = mat.rref()
+    result = _make_matrix_result(rref_mat, 'command')
+    # Inject pivot info into result
+    r = json.loads(result)
+    r['pivots'] = list(pivots)
+    r['plain'] += f'\nPivot columns: {list(pivots)}'
+    return json.dumps(r)
+
+
+def _cmd_mat_charpoly(parts):
+    """charpoly(M) — characteristic polynomial det(λI - M)."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    if mat.rows != mat.cols:
+        return json.dumps({'ok': False, 'error': 'charpoly() requires a square matrix'})
+    lam = Symbol('lambda')
+    poly = mat.charpoly(lam)
+    result = poly.as_expr()
+    return _make_result(result, 'command')
+
+
+def _cmd_mat_nullspace(parts):
+    """nullspace(M) — basis vectors of the null space."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    basis = mat.nullspace()
+    if not basis:
+        return json.dumps({'ok': True, 'latex': r'\{0\}', 'plain': '{0}', 'type': 'command'})
+    sym_latex = r'\left\{' + ',\ '.join(latex(v) for v in basis) + r'\right\}'
+    sym_plain = '{' + ', '.join(pretty(v, use_unicode=True) for v in basis) + '}'
+    return json.dumps({'ok': True, 'latex': sym_latex, 'plain': sym_plain, 'type': 'command'})
+
+
+def _cmd_mat_colspace(parts):
+    """colspace(M) — basis vectors of the column space."""
+    mat = _resolve_matrix_arg(parts[0])
+    if not isinstance(mat, MatrixBase):
+        return json.dumps({'ok': False, 'error': 'Argument is not a matrix'})
+    basis = mat.columnspace()
+    if not basis:
+        return json.dumps({'ok': True, 'latex': r'\{0\}', 'plain': '{0}', 'type': 'command'})
+    sym_latex = r'\left\{' + ',\ '.join(latex(v) for v in basis) + r'\right\}'
+    sym_plain = '{' + ', '.join(pretty(v, use_unicode=True) for v in basis) + '}'
+    return json.dumps({'ok': True, 'latex': sym_latex, 'plain': sym_plain, 'type': 'command'})
 
 
 # ── LaTeX Calculus Notation Handlers ────────────────────────

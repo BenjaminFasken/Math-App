@@ -32,14 +32,35 @@ let pyodideReady;
             statusEl.textContent = 'Installing SymPy…';
             await pyodide.loadPackage('sympy');
 
-            // 3. Load our CAS engine Python code
+            // 3. Install SymEngine from the local pre-built wasm wheel.
+            //    Falls back gracefully to SymPy-only if unavailable.
+            statusEl.textContent = 'Installing SymEngine…';
+            try {
+                await pyodide.loadPackage('micropip');
+                const wheelURL = new URL(
+                    'lib/symengine-0.14.1-cp312-cp312-pyodide_2024_0_wasm32.whl',
+                    window.location.href
+                ).href;
+                await pyodide.runPythonAsync(`
+import micropip
+await micropip.install('${wheelURL}')
+`);
+            } catch (e) {
+                console.warn('SymEngine wheel install failed (falling back to SymPy):', e);
+            }
+
+            // 5. Load our CAS engine Python code
             statusEl.textContent = 'Initialising CAS engine…';
             const response = await fetch('js/casEngine.py');
             const casCode = await response.text();
             await pyodide.runPythonAsync(casCode);
 
-            // 4. Ready!
-            statusEl.textContent = 'CAS engine ready';
+            // 6. Query back-end info for status bar
+            const engineInfo = JSON.parse(await pyodide.runPythonAsync('cas_engine_info()'));
+            const seLabel = engineInfo.symengine_available
+                ? ` + SymEngine ${engineInfo.symengine_version}`
+                : '';
+            statusEl.textContent = `CAS ready (SymPy ${engineInfo.sympy_version}${seLabel})`;
             statusEl.className = 'status-ready';
 
             return pyodide;
