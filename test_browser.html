@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MathApp Browser Tests</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.css">
+    <style>
+        body { font-family: monospace; background: #1e1e2e; color: #e0e0f0; padding: 20px; }
+        .pass { color: #4cce8a; } .fail { color: #f7576f; } .skip { color: #ffd700; }
+        .test { margin: 4px 0; } h2 { margin-top: 20px; }
+        #summary { font-size: 18px; margin-top: 20px; padding: 10px; border-top: 1px solid #555; }
+        #mq-container { position: absolute; left: -9999px; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.27.4/full/pyodide.js"></script>
+</head>
+<body>
+    <h1>MathApp Browser Tests</h1>
+    <div id="results"></div>
+    <div id="summary"></div>
+    <div id="mq-container"></div>
+
+    <!-- Load app modules -->
+    <script src="js/latexParser.js"></script>
+    <script src="js/loadPyodide.js"></script>
+    <script src="js/sendExpression.js"></script>
+    <script src="js/rowManager.js"></script>
+    <!-- NOT loading app.js — we test components individually -->
+
+    <script>
+    (async function() {
+        const results = document.getElementById('results');
+        const summaryEl = document.getElementById('summary');
+        let passed = 0, failed = 0, skipped = 0;
+
+        function log(status, msg) {
+            const cls = status === 'PASS' ? 'pass' : status === 'FAIL' ? 'fail' : 'skip';
+            if (status === 'PASS') passed++;
+            else if (status === 'FAIL') failed++;
+            else skipped++;
+            const div = document.createElement('div');
+            div.className = 'test ' + cls;
+            div.textContent = `[${status}] ${msg}`;
+            results.appendChild(div);
+        }
+
+        function section(title) {
+            const h = document.createElement('h2');
+            h.textContent = title;
+            results.appendChild(h);
+        }
+
+        function updateSummary() {
+            summaryEl.innerHTML =
+                `<span class="pass">${passed} passed</span> | ` +
+                `<span class="fail">${failed} failed</span> | ` +
+                `<span class="skip">${skipped} skipped</span> | ` +
+                `Total: ${passed + failed + skipped}`;
+        }
+
+        // ═══════════════════════════════════════════════
+        // 1. DEPENDENCY CHECKS
+        // ═══════════════════════════════════════════════
+        section('1. Dependencies');
+
+        try {
+            if (typeof jQuery !== 'undefined') log('PASS', 'jQuery loaded: v' + jQuery.fn.jquery);
+            else log('FAIL', 'jQuery not loaded');
+        } catch(e) { log('FAIL', 'jQuery check error: ' + e.message); }
+
+        try {
+            if (typeof MathQuill !== 'undefined') log('PASS', 'MathQuill loaded');
+            else log('FAIL', 'MathQuill not loaded');
+        } catch(e) { log('FAIL', 'MathQuill check error: ' + e.message); }
+
+        try {
+            if (typeof loadPyodide !== 'undefined') log('PASS', 'Pyodide loader available');
+            else log('FAIL', 'Pyodide loader not available');
+        } catch(e) { log('FAIL', 'Pyodide check error: ' + e.message); }
+
+        // ═══════════════════════════════════════════════
+        // 2. MATHQUILL INITIALIZATION
+        // ═══════════════════════════════════════════════
+        section('2. MathQuill Initialization');
+
+        let MQ;
+        try {
+            MQ = MathQuill.getInterface(2);
+            log('PASS', 'MathQuill.getInterface(2) succeeded');
+        } catch(e) {
+            log('FAIL', 'MathQuill.getInterface(2) failed: ' + e);
+        }
+
+        // Test creating a MathField with our exact config
+        let testMQ;
+        try {
+            const container = document.getElementById('mq-container');
+            const span = document.createElement('span');
+            container.appendChild(span);
+            testMQ = MQ.MathField(span, {
+                spaceBehavesLikeTab: false,
+                supSubsRequireOperand: true,
+                autoCommands: 'pi theta alpha beta gamma delta epsilon sigma omega phi psi lambda mu nu rho tau chi zeta eta iota kappa xi sqrt sum prod int infty',
+                autoOperatorNames: 'solve factor expand simplify diff integrate limit series subs sin cos tan cot sec csc arcsin arccos arctan sinh cosh tanh ln log exp abs floor ceil gcd lcm mod det lim',
+                handlers: { edit: function(){}, enter: function(){} },
+            });
+            log('PASS', 'MQ.MathField() created successfully');
+        } catch(e) {
+            log('FAIL', 'MQ.MathField() creation failed: ' + e);
+        }
+
+        // Test basic MathField operations
+        if (testMQ) {
+            try {
+                testMQ.latex('x^2 + 1');
+                const got = testMQ.latex();
+                if (got === 'x^2+1' || got === 'x^{2}+1' || got.includes('x') && got.includes('2')) {
+                    log('PASS', 'MQ.latex() set/get works: "' + got + '"');
+                } else {
+                    log('FAIL', 'MQ.latex() unexpected: "' + got + '"');
+                }
+            } catch(e) { log('FAIL', 'MQ.latex() error: ' + e.message); }
+
+            try {
+                testMQ.focus();
+                log('PASS', 'MQ.focus() works');
+            } catch(e) { log('FAIL', 'MQ.focus() error: ' + e.message); }
+
+            // Test typing
+            try {
+                testMQ.latex('');
+                testMQ.typedText('2+3');
+                const typed = testMQ.latex();
+                if (typed.includes('2') && typed.includes('3')) {
+                    log('PASS', 'MQ.typedText() works: "' + typed + '"');
+                } else {
+                    log('FAIL', 'MQ.typedText() unexpected: "' + typed + '"');
+                }
+            } catch(e) { log('FAIL', 'MQ.typedText() error: ' + e.message); }
+
+            // Test keystroke
+            try {
+                testMQ.keystroke('Enter');
+                log('PASS', 'MQ.keystroke("Enter") no crash');
+            } catch(e) { log('FAIL', 'MQ.keystroke("Enter") error: ' + e.message); }
+        }
+
+        // ═══════════════════════════════════════════════
+        // 3. ROW MANAGER
+        // ═══════════════════════════════════════════════
+        section('3. RowManager');
+
+        let testNotebook, rowInfo;
+        try {
+            testNotebook = document.createElement('main');
+            testNotebook.id = 'test-notebook';
+            document.body.appendChild(testNotebook);
+            rowInfo = RowManager.createRow(testNotebook);
+            if (rowInfo && rowInfo.el && rowInfo.mq && rowInfo.id) {
+                log('PASS', 'RowManager.createRow() returns {el, mq, id}');
+            } else {
+                log('FAIL', 'RowManager.createRow() missing fields: ' + JSON.stringify(Object.keys(rowInfo || {})));
+            }
+        } catch(e) { log('FAIL', 'RowManager.createRow() error: ' + e.message); }
+
+        if (rowInfo) {
+            // Check DOM structure
+            const hasGutter = rowInfo.el.querySelector('.row-gutter') !== null;
+            const hasInput = rowInfo.el.querySelector('.row-input') !== null;
+            const hasMqField = rowInfo.el.querySelector('.mq-editable-field') !== null;
+            const hasResult = rowInfo.el.querySelector('.row-result') !== null;
+            const hasMenu = rowInfo.el.querySelector('.btn-menu') !== null;
+
+            log(hasGutter ? 'PASS' : 'FAIL', 'Row has .row-gutter: ' + hasGutter);
+            log(hasInput ? 'PASS' : 'FAIL', 'Row has .row-input: ' + hasInput);
+            log(hasMqField ? 'PASS' : 'FAIL', 'Row has .mq-editable-field: ' + hasMqField);
+            log(hasResult ? 'PASS' : 'FAIL', 'Row has .row-result: ' + hasResult);
+            log(hasMenu ? 'PASS' : 'FAIL', 'Row has .btn-menu: ' + hasMenu);
+
+            // Test MQ field in the row
+            try {
+                rowInfo.mq.latex('\\frac{1}{2}');
+                const latex = rowInfo.mq.latex();
+                if (latex.includes('frac')) {
+                    log('PASS', 'Row MathField latex set/get: "' + latex + '"');
+                } else {
+                    log('FAIL', 'Row MathField latex unexpected: "' + latex + '"');
+                }
+            } catch(e) { log('FAIL', 'Row MathField error: ' + e.message); }
+
+            // Create second row
+            try {
+                const row2 = RowManager.createRow(testNotebook, rowInfo.el);
+                if (row2 && row2.id !== rowInfo.id) {
+                    log('PASS', 'Second row created with different id (' + row2.id + ' vs ' + rowInfo.id + ')');
+                } else {
+                    log('FAIL', 'Second row creation issue');
+                }
+            } catch(e) { log('FAIL', 'Second row creation error: ' + e.message); }
+
+            // Renumber
+            try {
+                RowManager.renumber(testNotebook);
+                const gutters = testNotebook.querySelectorAll('.row-gutter');
+                const nums = Array.from(gutters).map(g => g.textContent);
+                log('PASS', 'Renumber works: ' + nums.join(', '));
+            } catch(e) { log('FAIL', 'Renumber error: ' + e.message); }
+
+            // showResult
+            try {
+                RowManager.showResult(rowInfo.el, { ok: true, latex: 'x^2', type: 'expression' });
+                const resEl = rowInfo.el.querySelector('.row-result');
+                if (resEl.dataset.state === 'done') {
+                    log('PASS', 'showResult sets state=done');
+                } else {
+                    log('FAIL', 'showResult state: ' + resEl.dataset.state);
+                }
+            } catch(e) { log('FAIL', 'showResult error: ' + e.message); }
+
+            // showResult with error
+            try {
+                RowManager.showResult(rowInfo.el, { ok: false, error: 'test error' });
+                const resEl = rowInfo.el.querySelector('.row-result');
+                if (resEl.dataset.state === 'error' && resEl.textContent.includes('test error')) {
+                    log('PASS', 'showResult error display works');
+                } else {
+                    log('FAIL', 'showResult error state: ' + resEl.dataset.state);
+                }
+            } catch(e) { log('FAIL', 'showResult error case: ' + e.message); }
+        }
+
+        // ═══════════════════════════════════════════════
+        // 4. PYODIDE + CAS ENGINE
+        // ═══════════════════════════════════════════════
+        section('4. Pyodide + CAS Engine');
+
+        let pyodide;
+        try {
+            pyodide = await pyodideReady;
+            log('PASS', 'Pyodide loaded and ready');
+        } catch(e) {
+            log('FAIL', 'Pyodide failed to load: ' + e.message);
+        }
+
+        if (pyodide) {
+            // Test sympy import
+            try {
+                const ver = await pyodide.runPythonAsync('import sympy; sympy.__version__');
+                log('PASS', 'SymPy available: v' + ver);
+            } catch(e) { log('FAIL', 'SymPy import error: ' + e.message); }
+
+            // Test cas_evaluate function exists
+            try {
+                const exists = await pyodide.runPythonAsync('"cas_evaluate" in dir()');
+                if (exists) log('PASS', 'cas_evaluate() function exists');
+                else log('FAIL', 'cas_evaluate() not found');
+            } catch(e) { log('FAIL', 'cas_evaluate check error: ' + e.message); }
+
+            // ── sendExpression tests ──
+            section('5. CAS Evaluation via sendExpression');
+
+            const casTests = [
+                { input: '2+3', check: r => r.ok && (r.latex === '5' || r.plain === '5'), desc: '2+3 = 5' },
+                { input: 'x^2', check: r => r.ok && r.latex && r.latex.includes('x'), desc: 'x^2 symbolic' },
+                { input: 'x = 5', check: r => r.ok && r.type === 'assignment', desc: 'Variable assignment x=5' },
+                { input: 'x + 1', check: r => r.ok && (r.latex === '6' || r.plain === '6'), desc: 'x+1 = 6 (uses assigned x)' },
+                { input: '\\frac{1}{2} + \\frac{1}{3}', check: r => r.ok && r.latex, desc: 'Fraction addition' },
+                { input: 'f(t) = t^2 + 1', check: r => r.ok && r.type === 'function_def', desc: 'Function definition' },
+                { input: 'f(3)', check: r => r.ok && (r.latex === '10' || r.plain === '10'), desc: 'Function call f(3)=10' },
+                { input: '\\sqrt{16}', check: r => r.ok && (r.latex === '4' || r.plain === '4'), desc: 'sqrt(16) = 4' },
+                { input: 'solve\\left(x^2-4,x\\right)', check: r => r.ok, desc: 'solve(x^2-4, x)' },
+                { input: 'diff\\left(x^3,x\\right)', check: r => r.ok, desc: 'diff(x^3, x)' },
+            ];
+
+            for (const t of casTests) {
+                try {
+                    const result = await sendExpression(t.input);
+                    if (t.check(result)) {
+                        log('PASS', t.desc + ' → ' + (result.latex || result.plain || JSON.stringify(result)));
+                    } else {
+                        log('FAIL', t.desc + ' → ' + JSON.stringify(result));
+                    }
+                } catch(e) {
+                    log('FAIL', t.desc + ' → Error: ' + e.message);
+                }
+            }
+        } else {
+            log('SKIP', 'Skipping CAS tests — Pyodide not loaded');
+        }
+
+        // ═══════════════════════════════════════════════
+        // SUMMARY
+        // ═══════════════════════════════════════════════
+        updateSummary();
+        console.log(`\n=== TEST SUMMARY: ${passed} passed, ${failed} failed, ${skipped} skipped ===\n`);
+    })();
+    </script>
+</body>
+</html>

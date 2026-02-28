@@ -1,0 +1,389 @@
+/* ============================================================
+   MathApp — CAS Calculator  |  Main Stylesheet
+   ============================================================ */
+
+/* ---- Reset & base ---- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Reset margins/padding but NOT inside MathQuill elements */
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, li, figure, blockquote, dl, dd {
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #1e1e2e;
+    --surface: #282840;
+    --surface-hover: #31314a;
+    --border: #3e3e5e;
+    --text: #e0e0f0;
+    --text-muted: #9090b0;
+    --accent: #7c6ff7;
+    --accent-light: #9d93fa;
+    --error: #f7576f;
+    --success: #4cce8a;
+    --result-bg: #22223a;
+    --row-focus: #33335a;
+    --font-mono: 'Fira Code', 'Cascadia Code', 'JetBrains Mono', Consolas, monospace;
+    --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --radius: 8px;
+    --transition: 150ms ease;
+}
+
+html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    overflow-x: hidden;
+}
+
+/* ---- App shell ---- */
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ---- Header ---- */
+#app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 0 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+    flex-shrink: 0;
+}
+
+#app-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent-light);
+    letter-spacing: 0.5px;
+}
+
+#status-bar {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.status-loading {
+    color: var(--text-muted);
+}
+.status-loading::before {
+    content: '⏳ ';
+}
+.status-ready {
+    color: var(--success);
+}
+.status-ready::before {
+    content: '✓ ';
+}
+.status-error {
+    color: var(--error);
+}
+.status-error::before {
+    content: '✗ ';
+}
+
+/* ---- Notebook (rows container) ---- */
+#notebook {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 200px;
+}
+
+/* ---- Row ---- */
+.math-row {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    margin-bottom: 4px;
+    transition: border-color var(--transition), background var(--transition);
+    min-height: 48px;
+}
+
+.math-row:hover {
+    border-color: var(--border);
+}
+
+.math-row.focused {
+    border-color: var(--accent);
+    background: var(--row-focus);
+}
+
+/* Row number gutter */
+.row-gutter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    min-width: 42px;
+    font-size: 12px;
+    color: var(--text-muted);
+    user-select: none;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+}
+
+/* ---- Input area (MathQuill) ---- */
+.row-input {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 8px 4px;
+    min-width: 0;
+    position: relative;
+}
+
+.row-input .mq-editable-field {
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 18px;
+    padding: 4px 8px;
+    width: 100%;
+    min-height: 32px;
+}
+
+.row-input .mq-editable-field .mq-cursor {
+    border-color: var(--accent-light);
+}
+
+/* MathQuill override — make background transparent */
+.row-input .mq-editable-field.mq-focused {
+    box-shadow: none;
+    border-color: transparent;
+}
+
+/* ---- Result area ---- */
+.row-result {
+    display: flex;
+    align-items: center;
+    padding: 8px 14px 8px 10px;
+    min-width: 160px;
+    max-width: 45%;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--accent-light);
+    border-left: 1px solid var(--border);
+    white-space: pre-wrap;
+    word-break: break-word;
+    user-select: text;
+}
+
+.row-result.error {
+    color: var(--error);
+    font-size: 13px;
+}
+
+.row-result .result-latex {
+    display: inline-block;
+}
+
+/* ---- Separator (equals / assignment marker) ---- */
+.row-separator {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    color: var(--text-muted);
+    font-size: 18px;
+    user-select: none;
+}
+
+/* ---- Text mode input ---- */
+.row-text-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    padding: 10px 12px;
+    resize: none;
+}
+
+.row-text-input::placeholder {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* ---- Buttons / controls ---- */
+.row-controls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding-right: 6px;
+    opacity: 0;
+    transition: opacity var(--transition);
+}
+
+.math-row:hover .row-controls,
+.math-row.focused .row-controls {
+    opacity: 1;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: background var(--transition), color var(--transition);
+}
+
+.btn-icon:hover {
+    background: var(--surface-hover);
+    color: var(--text);
+}
+
+/* ---- Context menu ---- */
+.context-menu {
+    position: absolute;
+    right: 6px;
+    top: 100%;
+    z-index: 100;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    min-width: 160px;
+    padding: 4px 0;
+    display: none;
+}
+
+.context-menu.open {
+    display: block;
+}
+
+.context-menu-item {
+    display: block;
+    width: 100%;
+    padding: 8px 14px;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: background var(--transition);
+}
+
+.context-menu-item:hover {
+    background: var(--surface-hover);
+}
+
+.context-menu-item.danger {
+    color: var(--error);
+}
+
+/* ---- Text-mode toggle button ---- */
+.btn-text-toggle {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: 700;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: var(--surface-hover);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background var(--transition);
+}
+
+.btn-text-toggle:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+.math-row.focused .btn-text-toggle.visible {
+    display: flex;
+}
+
+/* ---- Scrollbar styling ---- */
+#notebook::-webkit-scrollbar {
+    width: 8px;
+}
+#notebook::-webkit-scrollbar-track {
+    background: transparent;
+}
+#notebook::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+}
+
+/* ---- MathQuill colour overrides ---- */
+.mq-editable-field .mq-root-block,
+.mq-editable-field .mq-root-block * {
+    color: var(--text);
+}
+
+.mq-math-mode .mq-empty {
+    background: transparent;
+}
+
+/* Static math (results) */
+.mq-math-mode:not(.mq-editable-field) {
+    border: none;
+    color: var(--accent-light);
+}
+
+/* ---- Assignment indicator ---- */
+.row-assignment-indicator {
+    font-size: 11px;
+    color: var(--text-muted);
+    padding: 2px 6px;
+    background: rgba(124,111,247,0.12);
+    border-radius: 3px;
+    white-space: nowrap;
+    margin-right: 4px;
+}
+
+/* ---- Loading overlay ---- */
+#loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30,30,46,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+#loading-overlay .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

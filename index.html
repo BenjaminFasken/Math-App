@@ -1,109 +1,37 @@
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css"/> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js"></script> -->
-
-<!-- <p>
-  Solve <span id="problem">ax^2 + bx + c = 0</span>:
-  <span id="answer">x=</span>
-</p>
-
-<script>
-  var MQ = MathQuill.getInterface(2);
-  MQ.StaticMath($('#problem')[0]);
-  var answer = MQ.MathField($('#answer')[0], {
-    handlers: {
-      edit: function() {
-        checkAnswer(answer.latex());
-      }
-    }
-  });
-</script> -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Custom Math Application</title>
-    <!-- Include MathQuill CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #document {
-            border: 1px solid #ccc;
-            padding: 10px;
-            min-height: 400px;
-        }
-        .equation-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .result {
-            width: 100px;
-            margin-right: 10px;
-            color: green;
-            font-weight: bold;
-        }
-        .mathquill-editable {
-            border: 1px solid #ddd;
-            padding: 5px;
-            min-height: 30px;
-            flex-grow: 1;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathApp — CAS Calculator</title>
+
+    <!-- MathQuill dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- jQuery (required by MathQuill) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- MathQuill -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
+    <!-- Pyodide -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.27.4/full/pyodide.js"></script>
 </head>
 <body>
-    <h1>Custom Math Application</h1>
-    <div id="document">
-        <!-- Equation containers will be added here -->
+    <div id="app">
+        <header id="app-header">
+            <h1>MathApp</h1>
+            <div id="status-bar">
+                <span id="engine-status" class="status-loading">Loading CAS engine…</span>
+            </div>
+        </header>
+        <main id="notebook"></main>
     </div>
-    <button id="add-equation">Add Equation</button>
 
-    <!-- Include MathQuill JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js"></script>
-    <script>
-        const MQ = MathQuill.getInterface(2); // MathQuill interface version 2
-        const documentDiv = document.getElementById('document');
-        const addEquationBtn = document.getElementById('add-equation');
-
-        // Function to add a new equation line
-        function addEquation() {
-            const container = document.createElement('div');
-            container.className = 'equation-container';
-
-            const resultSpan = document.createElement('span');
-            resultSpan.className = 'result';
-            resultSpan.innerText = 'Result';
-
-            const mathFieldSpan = document.createElement('span');
-            mathFieldSpan.className = 'mathquill-editable';
-            container.appendChild(resultSpan);
-            container.appendChild(mathFieldSpan);
-            documentDiv.appendChild(container);
-
-            // Initialize MathQuill on the new span
-            const mathField = MQ.MathField(mathFieldSpan, {
-                spaceBehavesLikeTab: true, // configurable
-                handlers: {
-                    edit: function() {
-                        const latex = mathField.latex();
-                        // Send the LaTeX to Python for computation
-                        window.pywebview.api.compute(latex).then(function(result) {
-                            resultSpan.innerText = result;
-                        });
-                    }
-                }
-            });
-        }
-
-        // Add initial equation
-        addEquation();
-
-        // Add equation on button click
-        addEquationBtn.addEventListener('click', addEquation);
-    </script>
+    <!-- Load application modules -->
+    <script src="js/latexParser.js"></script>
+    <script src="js/loadPyodide.js"></script>
+    <script src="js/sendExpression.js"></script>
+    <script src="js/rowManager.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
