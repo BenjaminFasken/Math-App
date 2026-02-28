@@ -174,6 +174,27 @@ def _preprocess_latex(tex):
     # Ensure \ln is recognized
     s = s.replace(r'\ln', r'\log')
 
+    # Ensure common math functions have \ prefix when followed by ( or {
+    # ONLY when the input already contains LaTeX commands (mixed plain/LaTeX).
+    # Pure plain inputs like sin(pi) must go through parse_expr instead.
+    if re.search(r'\\[a-zA-Z]', s):
+        s = re.sub(
+            r'(?<![\w\\])(sin|cos|tan|cot|sec|csc|arcsin|arccos|arctan'
+            r'|sinh|cosh|tanh|coth|exp|log|ln|det|lim)(?=\s*[\(\{])',
+            r'\\\1', s)
+
+    # Normalize single-character superscripts by adding braces:
+    # ^x → ^{x} for a single non-brace, non-backslash char.
+    # Fixes e.g. \int_0^55x being mis-parsed as \int_0^{55}x.
+    # In the fallback parse_expr path, _latex_to_algebra converts ^{…} → **()
+    s = re.sub(r'\^\s*([^{\\\s])', r'^{\1}', s)
+
+    # Normalize subscripts only after non-word chars (spaces, braces, parens).
+    # This preserves identifiers like e_var while fixing \int _0 → \int _{0}.
+    s = re.sub(r'(?<=[\s})])_\s*([^{\\\s])', r'_{\1}', s)
+    # Also handle _ directly after LaTeX commands like \int_0 (no space)
+    s = re.sub(r'(\\(?:int|sum|prod|lim|log|ln))_([^{\\])', r'\1_{\2}', s)
+
     return s
 
 
@@ -198,6 +219,27 @@ _CMD_PATTERNS = {
 _ASSIGN_VAR  = re.compile(r'^([a-zA-Z_]\w*)\s*=\s*(.+)$')
 _ASSIGN_FUNC = re.compile(r'^([a-zA-Z_]\w*)\s*\(([^)]+)\)\s*=\s*(.+)$')
 
+# ── LaTeX calculus notation: \sum, \prod, \lim ────────────
+# \sum_{lower}^{upper} body  or  \prod_{lower}^{upper} body
+_LATEX_SUM_PROD = re.compile(
+    r'^\\(sum|prod)\s*_\{([^}]*)\}\s*\^\{([^}]*)\}\s*(.+)$'
+)
+
+# \int_{lower}^{upper} body  (also handles with trailing dx)
+_LATEX_INT_DEF = re.compile(
+    r'^\\int\s*_\{([^}]*)\}\s*\^\{([^}]*)\}\s*(.+)$'
+)
+
+# \lim_{var \to point} body
+_LATEX_LIM_SUB = re.compile(
+    r'^\\(?:lim|operatorname\{lim\})\s*_\{([^}]*?)(?:\\to|\\rightarrow|→)\s*([^}]*)\}\s*(.+)$'
+)
+
+# Bare \lim body (no subscript)
+_LATEX_LIM_BARE = re.compile(
+    r'^\\(?:lim|operatorname\{lim\})\s+(.+)$'
+)
+
 
 # Known function / constant names that should NOT become Symbol products
 _KNOWN_NAMES = {
@@ -214,6 +256,7 @@ _KNOWN_NAMES = {
     'pi', 'oo', 'inf',
     'solve', 'factor', 'expand', 'simplify',
     'diff', 'integrate', 'limit', 'series',
+    'lim', 'int', 'sum', 'prod',
     'Rational', 'Integer', 'Float',
     'True', 'False', 'None',
 }
@@ -226,6 +269,22 @@ _CONSTANT_SUBS = {
     Symbol('i'): I,
     Symbol('oo'): oo,
     Symbol('inf'): oo,
+    Symbol('infty'): oo,
+}
+
+# Multi-character names that must be preserved as single symbols
+# (not split by implicit_multiplication_application).
+_MULTICHAR_SYMBOLS = {
+    # Greek letters
+    'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'varepsilon',
+    'zeta', 'eta', 'theta', 'vartheta',
+    'iota', 'kappa', 'mu', 'nu', 'xi',
+    'rho', 'sigma', 'tau', 'upsilon', 'phi', 'varphi',
+    'chi', 'psi', 'omega',
+    'Gamma', 'Delta', 'Theta', 'Lambda', 'Xi',
+    'Sigma', 'Upsilon', 'Phi', 'Psi', 'Omega',
+    # Special constants (handled later by _fix_constants)
+    'infty', 'infinity',
 }
 
 
@@ -236,6 +295,30 @@ def _fix_constants(expr):
         if sym in _CONSTANT_SUBS:
             subs[sym] = _CONSTANT_SUBS[sym]
     return expr.subs(subs) if subs else expr
+
+
+def _make_result(expr, result_type, skip_numeric=False, **extra):
+    """Build a JSON result string, optionally including a numeric approximation."""
+    sym_latex = latex(expr)
+    sym_plain = pretty(expr, use_unicode=True)
+    result = {
+        'ok': True,
+        'latex': sym_latex,
+        'plain': sym_plain,
+        'type': result_type,
+    }
+    if not skip_numeric:
+        try:
+            num_val = N(expr)
+            num_lat = latex(num_val)
+            # Include numeric only when meaningfully different from symbolic
+            if num_lat != sym_latex and not getattr(expr, 'is_Integer', False):
+                result['numeric_latex'] = num_lat
+                result['numeric_plain'] = pretty(num_val, use_unicode=True)
+        except Exception:
+            pass
+    result.update(extra)
+    return json.dumps(result)
 
 
 def _extract_braced(s, pos):
@@ -337,19 +420,34 @@ def _safe_parse_latex(tex):
             pass  # fall through to algebra conversion
 
     # ── Convert LaTeX constructs to algebra then use parse_expr ──
-    algebraic = _latex_to_algebra(tex) if has_latex_commands else tex
+    # Always run _latex_to_algebra to handle ^{exp} → **(exp) etc.,
+    # even for inputs with no \ commands (brace normalization may have added them).
+    algebraic = _latex_to_algebra(tex)
 
     # Strip remaining \commandname → commandname
     cleaned = re.sub(r'\\([a-zA-Z]+)', r'\1', algebraic)
 
-    # Build local_dict — include user-defined functions as Function objects
+    # Remove subscript braces so x_{1} becomes x_1 (valid Python identifier)
+    cleaned = re.sub(r'_\{([^}]*)\}', r'_\1', cleaned)
+
+    # Build local_dict — include user-defined functions, known variables,
+    # Greek letters, and single-character names as symbols.
+    # Multi-character unknown names are left out so that
+    # implicit_multiplication_application can split them (e.g. "xy" → x*y).
     names_in_expr = set(re.findall(r'[a-zA-Z_]\w*', cleaned))
     local = {}
     for n in names_in_expr:
         if n in _functions:
             local[n] = Function(n)
-        elif n not in _KNOWN_NAMES:
+        elif n in _variables:
             local[n] = _get_symbol(n)
+        elif n in _MULTICHAR_SYMBOLS:
+            local[n] = _get_symbol(n)
+        elif n in _KNOWN_NAMES:
+            pass  # built-in funcs/constants handled by parse_expr globals
+        elif len(n) == 1:
+            local[n] = _get_symbol(n)
+        # else: multi-char unknown → don't add; implicit mult will split it
     result = parse_expr(
         cleaned,
         transformations=standard_transformations + (implicit_multiplication_application, convert_xor),
@@ -422,6 +520,23 @@ def _eval_inner(raw_latex):
             inner = m_orig.group(1) if m_orig else m.group(1)
             return _handle_command(cmd_name, inner, tex)
 
+    # ── 0.5  LaTeX calculus notation (\sum, \prod, \int, \lim) ──
+    m = _LATEX_INT_DEF.match(tex)
+    if m:
+        return _handle_latex_int(m.group(1), m.group(2), m.group(3))
+
+    m = _LATEX_SUM_PROD.match(tex)
+    if m:
+        return _handle_latex_sum_prod(m.group(1), m.group(2), m.group(3), m.group(4))
+
+    m = _LATEX_LIM_SUB.match(tex)
+    if m:
+        return _handle_latex_limit(m.group(1), m.group(2), m.group(3))
+
+    m = _LATEX_LIM_BARE.match(tex)
+    if m:
+        return _handle_latex_limit_bare(m.group(1))
+
     # ── 1.  Detect function definition:  f(x, y) = expr ────
     m = _ASSIGN_FUNC.match(plain_cmd)
     if m:
@@ -446,12 +561,7 @@ def _eval_inner(raw_latex):
                 eq = Eq(lhs, rhs)
                 eq_resolved = _resolve_expr(eq)
                 result = simplify(eq_resolved)
-                return json.dumps({
-                    'ok': True,
-                    'latex': latex(result),
-                    'plain': pretty(result, use_unicode=True),
-                    'type': 'equation',
-                })
+                return _make_result(result, 'equation')
             except Exception:
                 pass  # Fall through to plain evaluation
 
@@ -460,12 +570,16 @@ def _eval_inner(raw_latex):
     resolved = _resolve_expr(expr)
     result = simplify(resolved)
 
-    return json.dumps({
-        'ok': True,
-        'latex': latex(result),
-        'plain': pretty(result, use_unicode=True),
-        'type': 'value',
-    })
+    # Evaluate Integral / Derivative objects that simplify didn't resolve
+    if hasattr(result, 'doit'):
+        try:
+            evaled = result.doit()
+            if evaled is not result:
+                result = simplify(evaled)
+        except Exception:
+            pass
+
+    return _make_result(result, 'value')
 
 
 # ── Command Handlers ────────────────────────────────────────
@@ -501,12 +615,7 @@ def _handle_command(cmd, inner_tex, full_tex):
     else:
         return json.dumps({'ok': False, 'error': f'Unknown command: {cmd}'})
 
-    return json.dumps({
-        'ok': True,
-        'latex': latex(result),
-        'plain': pretty(result, use_unicode=True),
-        'type': 'command',
-    })
+    return _make_result(result, 'command')
 
 
 def _cmd_solve(parts):
@@ -528,12 +637,7 @@ def _cmd_solve(parts):
     else:
         result = solve(expr, var)
 
-    return json.dumps({
-        'ok': True,
-        'latex': latex(result),
-        'plain': pretty(result, use_unicode=True),
-        'type': 'command',
-    })
+    return _make_result(result, 'command', skip_numeric=True)
 
 
 def _cmd_diff(parts):
@@ -544,12 +648,7 @@ def _cmd_diff(parts):
     # Don't substitute the differentiation variable
     expr = _resolve_expr(expr, exclude_vars={str(var)})
     result = diff(expr, var, order)
-    return json.dumps({
-        'ok': True,
-        'latex': latex(result),
-        'plain': pretty(result, use_unicode=True),
-        'type': 'command',
-    })
+    return _make_result(result, 'command')
 
 
 def _cmd_integrate(parts):
@@ -564,12 +663,7 @@ def _cmd_integrate(parts):
         result = integrate(expr, (var, a, b))
     else:
         result = integrate(expr, var)
-    return json.dumps({
-        'ok': True,
-        'latex': latex(result),
-        'plain': pretty(result, use_unicode=True),
-        'type': 'command',
-    })
+    return _make_result(result, 'command')
 
 
 def _cmd_limit(parts):
@@ -580,12 +674,7 @@ def _cmd_limit(parts):
     expr = _resolve_expr(expr, exclude_vars={str(var)})
     point = _safe_parse_latex(parts[2])
     result = limit(expr, var, point)
-    return json.dumps({
-        'ok': True,
-        'latex': latex(result),
-        'plain': pretty(result, use_unicode=True),
-        'type': 'command',
-    })
+    return _make_result(result, 'command')
 
 
 def _cmd_series(parts):
@@ -597,12 +686,7 @@ def _cmd_series(parts):
     point = _safe_parse_latex(parts[2]) if len(parts) > 2 else S.Zero
     n = int(parts[3]) if len(parts) > 3 else 6
     result = series(expr, var, point, n)
-    return json.dumps({
-        'ok': True,
-        'latex': latex(result),
-        'plain': pretty(result, use_unicode=True),
-        'type': 'command',
-    })
+    return _make_result(result, 'command', skip_numeric=True)
 
 
 def _cmd_subs(parts):
@@ -613,12 +697,101 @@ def _cmd_subs(parts):
     new = _safe_parse_latex(parts[2])
     result = expr.subs(old, new)
     result = simplify(result)
+    return _make_result(result, 'command')
+
+
+# ── LaTeX Calculus Notation Handlers ────────────────────────
+
+def _handle_latex_int(lower_tex, upper_tex, body_tex):
+    """Handle \\int_{a}^{b} body or \\int_{a}^{b} body dx."""
+    # Strip trailing d<var> (variable of integration notation)
+    body_tex = re.sub(r'\s*d([a-zA-Z_]\w*)\s*$', '', body_tex).strip()
+
+    lower_expr = _safe_parse_latex(lower_tex)
+    upper_expr = _safe_parse_latex(upper_tex)
+    body_expr = _safe_parse_latex(body_tex)
+
+    # Infer integration variable from body free symbols
+    body_expr_resolved_check = _resolve_expr(body_expr)
+    free = list(body_expr_resolved_check.free_symbols)
+    # Prefer 'x' if present, otherwise take the first free symbol
+    var = next((s for s in free if str(s) == 'x'), free[0] if free else None)
+    if var is None:
+        # Constant integrand — integrate with dummy variable
+        from sympy import Dummy
+        var = Dummy('x')
+
+    body_expr = _resolve_expr(body_expr, exclude_vars={str(var)})
+    result = integrate(body_expr, (var, lower_expr, upper_expr))
+    return _make_result(result, 'value')
+
+
+def _handle_latex_sum_prod(op, lower_tex, upper_tex, body_tex):
+    """Handle \\sum_{a}^{b} body or \\prod_{a}^{b} body."""
+    # Strip trailing d<var> from body (not meaningful for sum/prod)
+    body_tex = re.sub(r'\s*d([a-zA-Z])\s*$', '', body_tex).strip()
+
+    # Check if lower bound contains variable assignment like "n=0"
+    lower_assign = re.match(r'^\s*([a-zA-Z_]\w*)\s*=\s*(.+)$', lower_tex)
+    if lower_assign:
+        var_name = lower_assign.group(1)
+        lower_val_tex = lower_assign.group(2)
+        var = _get_symbol(var_name)
+        lower_expr = _safe_parse_latex(lower_val_tex)
+    else:
+        lower_expr = _safe_parse_latex(lower_tex)
+        var = None  # will infer from body
+
+    upper_expr = _safe_parse_latex(upper_tex)
+    body_expr = _safe_parse_latex(body_tex)
+
+    # Infer variable from body if not explicitly given
+    if var is None:
+        free = list(body_expr.free_symbols)
+        if free:
+            var = free[0]
+        else:
+            return json.dumps({'ok': False, 'error': f'Cannot determine variable for \\{op}'})
+
+    # Resolve body but keep the summation/product variable free
+    body_expr = _resolve_expr(body_expr, exclude_vars={str(var)})
+
+    if op == 'sum':
+        result = summation(body_expr, (var, lower_expr, upper_expr))
+    elif op == 'prod':
+        result = product(body_expr, (var, lower_expr, upper_expr))
+    else:
+        return json.dumps({'ok': False, 'error': f'Unknown operator: {op}'})
+
+    return _make_result(result, 'value')
+
+
+def _handle_latex_limit(var_tex, point_tex, body_tex):
+    """Handle \\lim_{x\\to a} body."""
+    var = _get_symbol(var_tex.strip())
+    point = _safe_parse_latex(point_tex.strip())
+    body_expr = _safe_parse_latex(body_tex)
+    body_expr = _resolve_expr(body_expr, exclude_vars={str(var)})
+    result = limit(body_expr, var, point)
+    return _make_result(result, 'value')
+
+
+def _handle_latex_limit_bare(body_tex):
+    """Handle bare \\lim body (no subscript specification).
+    Without a variable and approach point, we cannot evaluate the limit.
+    Return the body expression with \\lim notation preserved."""
+    body_expr = _safe_parse_latex(body_tex)
+    body_expr = _resolve_expr(body_expr)
+    result = simplify(body_expr)
+    sym_latex = r'\lim ' + latex(result)
+    sym_plain = 'lim ' + pretty(result, use_unicode=True)
     return json.dumps({
         'ok': True,
-        'latex': latex(result),
-        'plain': pretty(result, use_unicode=True),
-        'type': 'command',
+        'latex': sym_latex,
+        'plain': sym_plain,
+        'type': 'value',
     })
+    return _make_result(result, 'command')
 
 
 # ── Assignment Handlers ─────────────────────────────────────
@@ -644,13 +817,7 @@ def _handle_var_assignment(name, body_tex):
     resolved = _resolve_variable(name)
     simplified = simplify(resolved)
 
-    return json.dumps({
-        'ok': True,
-        'latex': latex(simplified),
-        'plain': pretty(simplified, use_unicode=True),
-        'type': 'assignment',
-        'name': name,
-    })
+    return _make_result(simplified, 'assignment', name=name)
 
 
 def _handle_function_def(fname, params_str, body_tex):
@@ -665,14 +832,7 @@ def _handle_function_def(fname, params_str, body_tex):
         'deps': _free_names(expr) - set(param_names),
     }
 
-    return json.dumps({
-        'ok': True,
-        'latex': latex(expr),
-        'plain': pretty(expr, use_unicode=True),
-        'type': 'function_def',
-        'name': fname,
-        'params': param_names,
-    })
+    return _make_result(expr, 'function_def', skip_numeric=True, name=fname, params=param_names)
 
 
 # ── Utility: list all defined symbols ───────────────────────

@@ -146,6 +146,34 @@ test('integrate(x^2, x, 0, 1) = 1/3',
      'integrate(x^2, x, 0, 1)',
      lambda r: r['ok'] and ('1' in r['plain'] and '3' in r['plain']))
 
+test(r'\int _0^25x shorthand = 15',
+     r'\int _0^25x',
+     lambda r: r['ok'] and '15' in (r.get('plain', '') + r.get('latex', '')))
+
+test(r'\int _0^25xdx shorthand = 15',
+     r'\int _0^25xdx',
+     lambda r: r['ok'] and '15' in (r.get('plain', '') + r.get('latex', '')))
+
+test(r'\sum _0^25x shorthand = 15',
+     r'\sum _0^25x',
+     lambda r: r['ok'] and '15' in (r.get('plain', '') + r.get('latex', '')))
+
+test(r'\sum _0^25xdx shorthand = 15',
+     r'\sum _0^25xdx',
+     lambda r: r['ok'] and '15' in (r.get('plain', '') + r.get('latex', '')))
+
+test(r'\prod _0^25x shorthand = 15',
+     r'\prod _0^25x',
+     lambda r: r['ok'] and '15' in (r.get('plain', '') + r.get('latex', '')))
+
+test(r'\prod _0^25xdx shorthand = 15',
+     r'\prod _0^25xdx',
+     lambda r: r['ok'] and '15' in (r.get('plain', '') + r.get('latex', '')))
+
+test(r'\lim x+2 should not parse as ilmx+2',
+     r'\lim x+2',
+     lambda r: r['ok'] and ('lim' in (r.get('plain', '') + r.get('latex', '')).lower()) and ('ⅈ⋅l⋅m' not in (r.get('plain', '') + r.get('latex', ''))))
+
 test('series(sin(x), x, 0, 5)',
      'series(sin(x), x, 0, 5)',
      lambda r: r['ok'] and r['type'] == 'command')

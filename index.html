@@ -24,6 +24,56 @@
                 <span id="engine-status" class="status-loading">Loading CAS engine…</span>
             </div>
         </header>
+        <!-- Symbol Picker Toolbar -->
+        <div id="symbol-picker">
+            <div class="picker-group" data-group="greek">
+                <span class="picker-label">Greek</span>
+                <button class="picker-btn" data-latex="\pi" title="pi">π</button>
+                <button class="picker-btn" data-latex="\alpha" title="alpha">α</button>
+                <button class="picker-btn" data-latex="\beta" title="beta">β</button>
+                <button class="picker-btn" data-latex="\gamma" title="gamma">γ</button>
+                <button class="picker-btn" data-latex="\delta" title="delta">δ</button>
+                <button class="picker-btn" data-latex="\epsilon" title="epsilon">ε</button>
+                <button class="picker-btn" data-latex="\theta" title="theta">θ</button>
+                <button class="picker-btn" data-latex="\lambda" title="lambda">λ</button>
+                <button class="picker-btn" data-latex="\mu" title="mu">μ</button>
+                <button class="picker-btn" data-latex="\sigma" title="sigma">σ</button>
+                <button class="picker-btn" data-latex="\phi" title="phi">φ</button>
+                <button class="picker-btn" data-latex="\omega" title="omega">ω</button>
+            </div>
+            <div class="picker-group" data-group="calculus">
+                <span class="picker-label">Calculus</span>
+                <button class="picker-btn" data-latex="\int" title="Integral">∫</button>
+                <button class="picker-btn" data-latex="\frac{d}{dx}" title="Derivative d/dx">d/dx</button>
+                <button class="picker-btn" data-latex="\sum" title="Summation">Σ</button>
+                <button class="picker-btn" data-latex="\prod" title="Product">Π</button>
+                <button class="picker-btn" data-latex="\lim" title="Limit">lim</button>
+                <button class="picker-btn" data-latex="\infty" title="Infinity">∞</button>
+            </div>
+            <div class="picker-group" data-group="operators">
+                <span class="picker-label">Ops</span>
+                <button class="picker-btn" data-latex="\sqrt{}" title="Square root">√</button>
+                <button class="picker-btn" data-latex="\frac{}{}" title="Fraction">a/b</button>
+                <button class="picker-btn" data-latex="^{}" title="Exponent">x^n</button>
+                <button class="picker-btn" data-latex="_{}" title="Subscript">x_n</button>
+                <button class="picker-btn" data-latex="\cdot" title="Multiplication dot">·</button>
+                <button class="picker-btn" data-latex="\times" title="Cross multiply">×</button>
+                <button class="picker-btn" data-latex="\pm" title="Plus-minus">±</button>
+                <button class="picker-btn" data-latex="\leq" title="Less than or equal">≤</button>
+                <button class="picker-btn" data-latex="\geq" title="Greater than or equal">≥</button>
+                <button class="picker-btn" data-latex="\neq" title="Not equal">≠</button>
+            </div>
+            <div class="picker-group" data-group="functions">
+                <span class="picker-label">Funcs</span>
+                <button class="picker-btn" data-latex="\sin" title="Sine">sin</button>
+                <button class="picker-btn" data-latex="\cos" title="Cosine">cos</button>
+                <button class="picker-btn" data-latex="\tan" title="Tangent">tan</button>
+                <button class="picker-btn" data-latex="\ln" title="Natural log">ln</button>
+                <button class="picker-btn" data-latex="\log" title="Logarithm">log</button>
+                <button class="picker-btn" data-latex="e^{}" title="Exponential">e^x</button>
+                <button class="picker-btn" data-latex="|" data-wrap="true" title="Absolute value">|x|</button>
+            </div>
+        </div>
         <main id="notebook"></main>
     </div>
 

@@ -333,12 +333,39 @@
         }
     });
 
+    // ── Symbol Picker ───────────────────────────────────────
+
+    function initSymbolPicker() {
+        const picker = document.getElementById('symbol-picker');
+        if (!picker) return;
+
+        picker.addEventListener('click', (e) => {
+            const btn = e.target.closest('.picker-btn');
+            if (!btn) return;
+            e.preventDefault();
+            e.stopPropagation();
+
+            const latexCmd = btn.dataset.latex;
+            if (!latexCmd) return;
+
+            // Find currently focused MathQuill field
+            if (focusedRowId === null) return;
+            const info = rows.get(focusedRowId);
+            if (!info || info.el.dataset.mode !== 'math') return;
+
+            // Write the LaTeX command into MathQuill
+            info.mq.cmd(latexCmd);
+            info.mq.focus();
+        });
+    }
+
     // ── Boot ───────────────────────────────────────────────
     let _booted = false;
     function boot() {
         if (_booted) return;
         _booted = true;
         init();
+        initSymbolPicker();
     }
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', boot);

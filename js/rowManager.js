@@ -227,6 +227,11 @@ const RowManager = (() => {
         resEl.dataset.state = 'done';
         resEl.innerHTML = '';
 
+        // Store both symbolic and numeric data for toggle
+        resEl.dataset.symbolicLatex = result.latex || '';
+        resEl.dataset.numericLatex = result.numeric_latex || '';
+        resEl.dataset.displayMode = 'symbolic';
+
         if (result.latex) {
             const span = document.createElement('span');
             span.className = 'result-latex';
@@ -244,6 +249,54 @@ const RowManager = (() => {
                 ? `${result.name}(${(result.params || []).join(', ')})`
                 : result.name;
             resEl.prepend(badge);
+        }
+
+        // Show numeric toggle button if a numeric value is available
+        if (result.numeric_latex && result.numeric_latex !== result.latex) {
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'btn-numeric-toggle';
+            toggleBtn.textContent = '≈';
+            toggleBtn.title = 'Toggle numeric / symbolic';
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleNumeric(resEl);
+            });
+            resEl.appendChild(toggleBtn);
+        }
+    }
+
+    /**
+     * Toggle between symbolic and numeric display.
+     */
+    function toggleNumeric(resEl) {
+        const mode = resEl.dataset.displayMode;
+        const symLatex = resEl.dataset.symbolicLatex;
+        const numLatex = resEl.dataset.numericLatex;
+
+        if (!numLatex) return;
+
+        const newMode = mode === 'symbolic' ? 'numeric' : 'symbolic';
+        const newLatex = newMode === 'numeric' ? numLatex : symLatex;
+        resEl.dataset.displayMode = newMode;
+
+        // Update the rendered math (preserve badge and toggle button)
+        const badge = resEl.querySelector('.row-assignment-indicator');
+        const toggleBtn = resEl.querySelector('.btn-numeric-toggle');
+        resEl.innerHTML = '';
+
+        if (badge) resEl.appendChild(badge);
+
+        const span = document.createElement('span');
+        span.className = 'result-latex';
+        resEl.appendChild(span);
+        MQ.StaticMath(span).latex(newLatex);
+
+        if (toggleBtn) {
+            toggleBtn.textContent = newMode === 'numeric' ? '=' : '≈';
+            toggleBtn.title = newMode === 'numeric'
+                ? 'Show symbolic value'
+                : 'Show numeric value';
+            resEl.appendChild(toggleBtn);
         }
     }
 

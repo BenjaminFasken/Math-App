@@ -363,6 +363,92 @@ html, body {
     margin-right: 4px;
 }
 
+/* ---- Numeric toggle button ---- */
+.btn-numeric-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-left: 8px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface-hover);
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+    flex-shrink: 0;
+}
+
+.btn-numeric-toggle:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ---- Symbol Picker Toolbar ---- */
+#symbol-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 0 12px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+
+.picker-group {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0 6px;
+    border-right: 1px solid var(--border);
+}
+
+.picker-group:last-child {
+    border-right: none;
+}
+
+.picker-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.picker-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 2px 5px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: none;
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--transition), border-color var(--transition);
+    user-select: none;
+}
+
+.picker-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--border);
+}
+
+.picker-btn:active {
+    background: var(--accent);
+    color: #fff;
+}
+
 /* ---- Loading overlay ---- */
 #loading-overlay {
     position: fixed;
